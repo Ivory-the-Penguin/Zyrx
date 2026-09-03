@@ -5,6 +5,8 @@ project('zorax-compiler', 'cpp',
 
 sources = [
   'src/main.cpp',
+  'src/Token.cpp',
+  'src/Lexer.cpp',
 ]
 
 executable('zorax',
