@@ -49,7 +49,9 @@ typedef struct {
   double y;
 } Vector;
 
-void Vector_print() { puts("Vector has printed!"); }
+void Vector_print(Vector* self) { 
+  puts("Vector has printed!"); 
+}
 
 double Vector_length(const Vector *self) {
   return sqrt(self->x * self->x + self->y * self->y);
