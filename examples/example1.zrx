@@ -1,0 +1,15 @@
+\\ The <- syntax is for constants, which are used for imports, constants, functions, procedures, enums, structs, etc...
+\\ The symbol could change
+
+\\ Inspired by Zig and Odin, but mostly Odin
+\\ We comment using the double backslash.
+io <- "core:io"
+
+main <- proc() int {
+  \\ using . syntax to access methods in modules
+  \\ could change
+  io.println("Hello World!")
+  \\ language prebuilt, or something from the os?
+  \\ from os module means you would only use it if you strictly want error returns
+  exit(0)
+}
