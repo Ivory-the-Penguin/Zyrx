@@ -45,6 +45,12 @@ std::string TokenTypeToStringView(TokenType token) {
   case TOKEN_COMMENT:
     return "\\\\";
     break;
+  case TOKEN_COLON:
+    return ":";
+    break;
+  case TOKEN_EQUAL:
+    return "=";
+    break;
 
   case TOKEN_UNKNOWN:
     return "UNKNOWN";
