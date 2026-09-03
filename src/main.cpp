@@ -1,5 +1,8 @@
+#include <algorithm>
 #include <cctype>
 #include <iostream>
+#include <string>
+#include <string_view>
 #include <vector>
 
 typedef enum {
@@ -88,8 +91,7 @@ std::string_view TokenTypeToStringView(TokenType token) {
     return "UNKNOWN";
     break;
 
-  case TOKEN_COUNT:
-    return "TOKEN_COUNT";
+  default:
     break;
   }
 
@@ -99,29 +101,59 @@ std::string_view TokenTypeToStringView(TokenType token) {
 void GetTokensFromLine(std::string_view line, std::vector<Token> &tokens,
                        uint lineNumber = 0) {
 
-  uint startIndex, currentIndex = 0;
+  uint currentIndex = 0;
   while (currentIndex < line.size()) {
     if (line[currentIndex] == '\\' && line[++currentIndex] == '\\') {
       while (!std::isalnum(line[currentIndex])) {
         currentIndex++;
       }
 
-      tokens.push_back(Token{.line = lineNumber,
-                             .column = currentIndex,
-                             .token = TOKEN_COMMENT,
-                             .comment = line.substr(currentIndex)});
+      tokens.push_back({.line = lineNumber,
+                        .column = currentIndex,
+                        .token = TOKEN_COMMENT,
+                        .comment = line.substr(currentIndex)});
       break;
     }
   }
+
+  tokens.push_back(
+      {.line = lineNumber, .column = currentIndex, .token = TOKEN_NEW_LINE});
+}
+
+void OutputToken(Token token) {
+  std::string buffer;
+
+  buffer.append(TokenTypeToStringView(token.token));
+
+  switch (token.token) {
+  case TOKEN_COMMENT:
+    buffer.append(" (");
+    buffer.append(token.comment);
+    buffer.append(")");
+    break;
+
+  case TOKEN_IDENTIFIER:
+    buffer.append("(");
+    buffer.append(token.identifier);
+    buffer.append(")");
+    break;
+  case TOKEN_NEW_LINE:
+    buffer.append("\n");
+  default:
+    break;
+  }
+
+  std::cout << buffer << ' ';
 }
 
 int main() {
   std::vector<Token> tokens;
   GetTokensFromLine("\\\\ This is a comment!", tokens);
-  GetTokensFromLine("\\\\ THIS is ANOTHER comment, mwahahahhaaha", tokens);
+  GetTokensFromLine("\\\\ THIS is ANOTHER comment, mwahahahahahahaha", tokens);
 
-  for (auto i : tokens) {
-    std::cout << TokenTypeToStringView(i.token) << ' ' << i.comment;
+  std::string buffer;
+  for (auto token : tokens) {
+    OutputToken(token);
   }
   std::cout << '\n';
 
