@@ -96,9 +96,8 @@ std::string_view TokenTypeToStringView(TokenType token) {
   return "NOT_A_TOKEN";
 }
 
-std::vector<Token> GetTokensFromLine(std::string_view line,
-                                     uint lineNumber = 0) {
-  std::vector<Token> tokens;
+void GetTokensFromLine(std::string_view line, std::vector<Token> &tokens,
+                       uint lineNumber = 0) {
 
   uint startIndex, currentIndex = 0;
   while (currentIndex < line.size()) {
@@ -114,12 +113,12 @@ std::vector<Token> GetTokensFromLine(std::string_view line,
       break;
     }
   }
-
-  return tokens;
 }
 
 int main() {
-  std::vector<Token> tokens = GetTokensFromLine("\\\\ This is a comment!");
+  std::vector<Token> tokens;
+  GetTokensFromLine("\\\\ This is a comment!", tokens);
+  GetTokensFromLine("\\\\ THIS is ANOTHER comment, mwahahahhaaha", tokens);
 
   for (auto i : tokens) {
     std::cout << TokenTypeToStringView(i.token) << ' ' << i.comment;
