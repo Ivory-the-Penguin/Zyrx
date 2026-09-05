@@ -19,7 +19,7 @@ private:
 
   char PeekChar(const std::string &string) const {
     if (column_ + 1 < string.size()) {
-      return string[column_];
+      return string[column_ + 1];
     }
     return '\0';
   }

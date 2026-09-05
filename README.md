@@ -64,7 +64,7 @@ There are no high-level types, since it's a systems language. This means we don'
 
 It's also Data Oriented, which means it works with mostly structs. That means C isn't trying to imitate an OOP language!
 
-There's also seamless C interop, since it's compiled to C. All types in Zorax also only correspond to their 64-bit C counter part, this is subject to change.
+There's also seamless C interop, since it's compiled to C. All types in Zorax also only correspond to their 64-bit C counter part. **This is subject to change.**
 
 ---
 ## The plan
