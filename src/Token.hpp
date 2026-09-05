@@ -36,12 +36,13 @@ struct Token {
 
   TokenType token;
 
-  std::string identifier;
+  std::string lexeme;
   std::string comment;
+  std::string literal;
   DataType type;
 
   void Output();
 };
 
-std::string TokenTypeToStringView(TokenType token);
+std::string TokenTypeToString(TokenType token);
 void OutputToken(Token token);
