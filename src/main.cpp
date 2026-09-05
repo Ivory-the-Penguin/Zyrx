@@ -6,6 +6,8 @@ int main() {
 
   lexer.GetTokensFromLine("\\\\ This is a comment!");
   lexer.GetTokensFromLine("main <- proc() int {");
+  lexer.GetTokensFromLine("\treturn 0");
+  lexer.GetTokensFromLine("}");
 
   for (auto token : lexer.GetTokens()) {
     token.Output();

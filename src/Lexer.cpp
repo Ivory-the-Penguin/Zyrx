@@ -1,4 +1,5 @@
 #include "Lexer.hpp"
+#include "src/Token.hpp"
 #include <string>
 
 const std::vector<Token> &Lexer::GetTokens() const { return tokens_; }
@@ -10,27 +11,25 @@ void Lexer::GetTokensFromLine(std::string string) {
     { // SINGLE CHARACTER TOKENS
       switch (string[column_]) {
       case '(':
-        AddToken(TOKEN_LEFT_PARENTHESIS);
+        AddToken(TokenType::LEFT_PARENTHESIS);
         break;
       case ')':
-        AddToken(TOKEN_RIGHT_PARENTHESIS);
+        AddToken(TokenType::RIGHT_PARENTHESIS);
         break;
       case '{':
-        AddToken(TOKEN_LEFT_BRACE);
+        AddToken(TokenType::LEFT_BRACE);
         break;
       case '}':
-        AddToken(TOKEN_RIGHT_BRACE);
+        AddToken(TokenType::RIGHT_BRACE);
         break;
       case '.':
-        AddToken(TOKEN_PERIOD);
+        AddToken(TokenType::PERIOD);
         break;
       case ':':
-        AddToken(TOKEN_COLON);
+        AddToken(TokenType::COLON);
         break;
       case '=':
-        AddToken(TOKEN_EQUAL);
-        break;
-      default:
+        AddToken(TokenType::EQUAL);
         break;
       }
     }
@@ -38,5 +37,5 @@ void Lexer::GetTokensFromLine(std::string string) {
     column_++;
   }
 
-  AddToken(TOKEN_NEW_LINE);
+  AddToken(TokenType::NEW_LINE);
 }

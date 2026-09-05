@@ -3,30 +3,31 @@
 #include <cstdint>
 #include <string>
 
-typedef enum {
-  TOKEN_UNKNOWN = -1,
-  TOKEN_EOF,
-  TOKEN_NEW_LINE,
-  TOKEN_IDENTIFIER,
-  TOKEN_CONST_DEF,
-  TOKEN_STRING,
-  TOKEN_PROCEDURE,
-  TOKEN_FUNCTION,
-  TOKEN_PERIOD,
-  TOKEN_TYPE,
-  TOKEN_LEFT_PARENTHESIS,
-  TOKEN_RIGHT_PARENTHESIS,
-  TOKEN_LEFT_BRACE,
-  TOKEN_RIGHT_BRACE,
-  TOKEN_COMMENT,
-  TOKEN_COLON,
-  TOKEN_EQUAL,
+enum class TokenType : int8_t {
+  UNKNOWN = -1,
+  END_OF_FILE,
+  NEW_LINE,
+  IDENTIFIER,
+  CONST_DEF,
+  STRING,
+  PROCEDURE,
+  FUNCTION,
+  PERIOD,
+  TYPE,
+  LEFT_PARENTHESIS,
+  RIGHT_PARENTHESIS,
+  LEFT_BRACE,
+  RIGHT_BRACE,
+  COMMENT,
+  COLON,
+  EQUAL,
+  COUNT
+};
 
-  TOKEN_COUNT
-} TokenType;
-
-enum Type {
-  TYPE_INT,
+enum class DataType : int8_t {
+  INT,
+  FLOAT,
+  CSTRING,
 };
 
 struct Token {
@@ -37,7 +38,7 @@ struct Token {
 
   std::string identifier;
   std::string comment;
-  Type type;
+  DataType type;
 
   void Output();
 };

@@ -3,56 +3,56 @@
 
 std::string TokenTypeToStringView(TokenType token) {
   switch (token) {
-  case TOKEN_EOF:
+  case TokenType::END_OF_FILE:
     return "EOF";
     break;
-  case TOKEN_NEW_LINE:
+  case TokenType::NEW_LINE:
     return "NEW_LINE";
     break;
-  case TOKEN_IDENTIFIER:
+  case TokenType::IDENTIFIER:
     return "IDENTIFIER";
     break;
-  case TOKEN_CONST_DEF:
+  case TokenType::CONST_DEF:
     return "<-";
     break;
-  case TOKEN_STRING:
+  case TokenType::STRING:
     return "STRING";
     break;
-  case TOKEN_PROCEDURE:
+  case TokenType::PROCEDURE:
     return "proc";
     break;
-  case TOKEN_FUNCTION:
+  case TokenType::FUNCTION:
     return "func";
     break;
-  case TOKEN_PERIOD:
+  case TokenType::PERIOD:
     return ".";
     break;
-  case TOKEN_TYPE:
+  case TokenType::TYPE:
     return "TYPE";
     break;
-  case TOKEN_LEFT_PARENTHESIS:
+  case TokenType::LEFT_PARENTHESIS:
     return "(";
     break;
-  case TOKEN_RIGHT_PARENTHESIS:
+  case TokenType::RIGHT_PARENTHESIS:
     return ")";
     break;
-  case TOKEN_LEFT_BRACE:
+  case TokenType::LEFT_BRACE:
     return "{";
     break;
-  case TOKEN_RIGHT_BRACE:
+  case TokenType::RIGHT_BRACE:
     return "}";
     break;
-  case TOKEN_COMMENT:
+  case TokenType::COMMENT:
     return "\\\\";
     break;
-  case TOKEN_COLON:
+  case TokenType::COLON:
     return ":";
     break;
-  case TOKEN_EQUAL:
+  case TokenType::EQUAL:
     return "=";
     break;
 
-  case TOKEN_UNKNOWN:
+  case TokenType::UNKNOWN:
     return "UNKNOWN";
     break;
 
@@ -69,18 +69,18 @@ void Token::Output() {
   buffer.append(TokenTypeToStringView(token));
 
   switch (token) {
-  case TOKEN_COMMENT:
+  case TokenType::COMMENT:
     buffer.append(" (");
     buffer.append(comment);
     buffer.append(")");
     break;
 
-  case TOKEN_IDENTIFIER:
+  case TokenType::IDENTIFIER:
     buffer.append("(");
     buffer.append(identifier);
     buffer.append(")");
     break;
-  case TOKEN_NEW_LINE:
+  case TokenType::NEW_LINE:
     buffer.append("\n");
   default:
     break;
