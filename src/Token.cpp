@@ -4,15 +4,13 @@
 std::string TokenTypeToString(TokenType token) {
   switch (token) {
   case TokenType::END_OF_FILE:
-    return "EOF";
+    return "END_OF_FILE";
   case TokenType::NEW_LINE:
     return "NEW_LINE";
   case TokenType::IDENTIFIER:
     return "IDENTIFIER";
   case TokenType::CONST_DEF:
     return "<-";
-  case TokenType::LITERAL:
-    return "LITERAL";
   case TokenType::PROCEDURE:
     return "proc";
   case TokenType::FUNCTION:
@@ -30,13 +28,37 @@ std::string TokenTypeToString(TokenType token) {
   case TokenType::RIGHT_BRACE:
     return "}";
   case TokenType::COMMENT:
-    return "\\\\";
+    return "--";
   case TokenType::COLON:
     return ":";
-  case TokenType::COLON_EQUAL:
-    return ":=";
   case TokenType::EQUAL:
     return "=";
+  case TokenType::EQUAL_CMP:
+    return "==";
+  case TokenType::LESS_CMP:
+    return "<";
+  case TokenType::BIGGER_CMP:
+    return ">";
+  case TokenType::LESS_EQUAL_CMP:
+    return "<=";
+  case TokenType::BIGGER_EQUAL_CMP:
+    return ">=";
+  case TokenType::BANG_EQUAL_CMP:
+    return "!=";
+  case TokenType::BANG:
+    return "!";
+  case TokenType::COLON_EQUAL:
+    return ":=";
+  case TokenType::MINUS:
+    return "-";
+  case TokenType::PLUS:
+    return "+";
+  case TokenType::STAR:
+    return "*";
+  case TokenType::DIVIDE:
+    return "/";
+  case TokenType::LITERAL:
+    return "LITERALL";
 
   case TokenType::UNKNOWN:
     return "UNKNOWN";
@@ -81,6 +103,12 @@ void Token::Output() {
     break;
   default:
     break;
+  }
+
+  if (type != DataType::NONE) {
+    buffer.append("(");
+    buffer.append(DataTypeToString(type));
+    buffer.append(")");
   }
 
   std::cout << buffer << (token == TokenType::NEW_LINE ? '\n' : ' ');

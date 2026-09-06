@@ -2,7 +2,7 @@
 #include <iostream>
 
 int main() {
-  Lexer lexer("\\\\ This is a comment!\n"
+  Lexer lexer("-- This is a comment!\n"
               "main <- proc() int {\n"
               "\tsome_var := 10\n"
               "\treturn 0\n"

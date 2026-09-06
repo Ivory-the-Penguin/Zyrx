@@ -1,6 +1,8 @@
 #include "Lexer.hpp"
 #include "src/Token.hpp"
 #include <string>
+#include <string_view>
+#include <variant>
 
 const std::vector<Token> &Lexer::GetTokens() const { return tokens_; }
 
@@ -32,7 +34,11 @@ void Lexer::GetTokensFromSource() {
       AddToken((PeekChar('=') ? TokenType::EQUAL_CMP : TokenType::EQUAL));
       break;
     case '-':
-      AddToken(TokenType::MINUS);
+      if (PeekChar('-')) {
+        AddToken(TokenType::COMMENT);
+      } else {
+        AddToken(TokenType::MINUS);
+      }
       break;
     case '<':
       if (PeekChar('-')) {
@@ -65,7 +71,7 @@ void Lexer::AddToken(TokenType token) {
   });
 };
 
-void Lexer::AddToken(int literal) {
+void Lexer::AddLiteral(int literal) {
   tokens_.push_back(Token{
       .line = lineNumber_,
       .column = column_,
@@ -77,7 +83,7 @@ void Lexer::AddToken(int literal) {
   });
 }
 
-void Lexer::AddToken(std::string_view literal) {
+void Lexer::AddLiteral(std::string_view literal) {
   tokens_.push_back(Token{
       .line = lineNumber_,
       .column = column_,
@@ -89,7 +95,7 @@ void Lexer::AddToken(std::string_view literal) {
   });
 }
 
-void Lexer::AddToken(double literal) {
+void Lexer::AddLiteral(double literal) {
   tokens_.push_back(Token{
       .line = lineNumber_,
       .column = column_,
@@ -98,6 +104,18 @@ void Lexer::AddToken(double literal) {
       .lexeme = "",
       .comment = "",
       .literal = literal,
+  });
+}
+
+void Lexer::AddComment(std::string_view comment) {
+  tokens_.push_back(Token{
+      .line = lineNumber_,
+      .column = column_,
+      .token = TokenType::COMMENT,
+      .type = DataType::NONE,
+      .lexeme = "",
+      .comment = comment,
+      .literal = std::monostate(),
   });
 }
 

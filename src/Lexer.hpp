@@ -13,9 +13,12 @@ public:
 
 private:
   void AddToken(TokenType token);
-  void AddToken(int literal);
-  void AddToken(std::string_view literal);
-  void AddToken(double literal);
+
+  void AddLiteral(int literal);
+  void AddLiteral(std::string_view literal);
+  void AddLiteral(double literal);
+
+  void AddComment(std::string_view comment);
 
   char PeekChar(char match = '\0');
 
