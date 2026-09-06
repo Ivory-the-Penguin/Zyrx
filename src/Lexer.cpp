@@ -90,3 +90,10 @@ void Lexer::AddToken(double literal) {
       .literal = literal,
   });
 }
+
+char Lexer::PeekChar() const {
+  if (column_ + 1 < source_.size()) {
+    return source_[column_ + 1];
+  }
+  return '\0';
+}

@@ -18,12 +18,7 @@ private:
   void AddToken(std::string_view literal);
   void AddToken(double literal);
 
-  char PeekChar() const {
-    if (column_ + 1 < source_.size()) {
-      return source_[column_ + 1];
-    }
-    return '\0';
-  }
+  char PeekChar() const;
 
   uint32_t lineNumber_;
   uint32_t column_;
