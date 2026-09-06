@@ -20,6 +20,8 @@ private:
 
   void AddComment(std::string_view comment);
 
+  void AddIdentifier(std::string_view);
+
   char PeekChar() const;
   bool Match(char match);
   int64_t Advance(int64_t n = 1);

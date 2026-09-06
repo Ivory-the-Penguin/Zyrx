@@ -43,7 +43,7 @@ void Lexer::GetTokensFromSource() {
         }
 
         std::string_view view(source_.begin() + start,
-                              source_.begin() + location_ - 1);
+                              source_.begin() + location_);
 
         while (!view.empty() && std::isspace(view.front())) {
           view.remove_prefix(1);
@@ -69,6 +69,10 @@ void Lexer::GetTokensFromSource() {
       AddToken(TokenType::NEW_LINE);
       lineNumber_++;
       column_ = 0;
+    default:
+      if (std::isalpha(source_[location_])) {
+        AddIdentifier(ConsumeLexeme());
+      }
     }
 
     Advance();
@@ -137,6 +141,18 @@ void Lexer::AddComment(std::string_view comment) {
   });
 }
 
+void Lexer::AddIdentifier(std::string_view identifier) {
+  tokens_.push_back(Token{
+      .line = lineNumber_,
+      .column = column_,
+      .token = TokenType::IDENTIFIER,
+      .type = DataType::NONE,
+      .lexeme = identifier,
+      .comment = "",
+      .literal = std::monostate(),
+  });
+}
+
 char Lexer::PeekChar() const {
   if (location_ + 1 < source_.size()) {
     return source_[location_ + 1];
@@ -166,9 +182,9 @@ std::string_view Lexer::ConsumeLexeme() {
   }
 
   uint64_t start = location_;
-  while (std::isalnum(PeekChar())) {
+  while (Match('_') || std::isalnum(PeekChar())) {
     Advance();
   }
 
-  return std::string_view(source_.begin() + start, source_.begin() + location_);
+  return std::string_view(source_.begin() + start, source_.begin() + Advance());
 }
