@@ -44,10 +44,10 @@ void Lexer::GetTokensFromSource() {
         std::string_view view(source_.begin() + start,
                               source_.begin() + column_--);
 
-        while (std::isspace(view.front())) {
+        while (!view.empty() && std::isspace(view.front())) {
           view.remove_prefix(1);
         }
-        while (std::isspace(view.back())) {
+        while (!view.empty() && std::isspace(view.back())) {
           view.remove_suffix(1);
         }
 
