@@ -37,7 +37,7 @@ void Lexer::GetTokensFromSource() {
     case '-':
       if (Match('-')) {
         uint64_t start = ++column_;
-        while (PeekChar() != '\n') {
+        while (PeekChar() != '\n' && PeekChar() != '\0') {
           column_++;
         }
 
