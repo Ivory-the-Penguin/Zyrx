@@ -29,6 +29,8 @@ void Lexer::GetTokensFromSource() {
     case '.':
       AddToken(TokenType::PERIOD);
       break;
+    case ';':
+      AddToken(TokenType::SEMICOLON);
     case ':':
       AddToken((Match('=') ? TokenType::COLON_EQUAL : TokenType::COLON));
       break;

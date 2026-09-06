@@ -34,6 +34,7 @@ enum class TokenType : int8_t {
   STAR,
   DIVIDE,
   LITERAL,
+  SEMICOLON,
   COUNT
 };
 

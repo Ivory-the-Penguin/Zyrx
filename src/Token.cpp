@@ -57,6 +57,8 @@ std::string TokenTypeToString(TokenType token) {
     return "*";
   case TokenType::DIVIDE:
     return "/";
+  case TokenType::SEMICOLON:
+    return ";";
   case TokenType::LITERAL:
     return "LITERAL";
 
