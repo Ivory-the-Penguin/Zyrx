@@ -6,6 +6,7 @@ const std::vector<Token> &Lexer::GetTokens() const { return tokens_; }
 
 void Lexer::GetTokensFromSource() {
   column_ = 0;
+  lineNumber_ = 0;
 
   while (column_ < source_.size()) {
     { // SINGLE CHARACTER TOKENS
@@ -26,7 +27,11 @@ void Lexer::GetTokensFromSource() {
         AddToken(TokenType::PERIOD);
         break;
       case ':':
-        AddToken(TokenType::COLON);
+        if (PeekChar() == '=') {
+          AddToken(TokenType::COLON_EQUAL);
+        } else {
+          AddToken(TokenType::COLON);
+        }
         break;
       case '=':
         AddToken(TokenType::EQUAL);
@@ -91,9 +96,9 @@ void Lexer::AddToken(double literal) {
   });
 }
 
-char Lexer::PeekChar() const {
+char Lexer::PeekChar() {
   if (column_ + 1 < source_.size()) {
-    return source_[column_ + 1];
+    return source_[++column_];
   }
   return '\0';
 }

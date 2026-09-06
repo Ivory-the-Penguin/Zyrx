@@ -21,6 +21,7 @@ enum class TokenType : int8_t {
   COMMENT,
   COLON,
   EQUAL,
+  COLON_EQUAL,
   LITERAL,
   COUNT
 };

@@ -33,6 +33,8 @@ std::string TokenTypeToString(TokenType token) {
     return "\\\\";
   case TokenType::COLON:
     return ":";
+  case TokenType::COLON_EQUAL:
+    return ":=";
   case TokenType::EQUAL:
     return "=";
 
@@ -77,11 +79,9 @@ void Token::Output() {
     buffer.append(lexeme);
     buffer.append(")");
     break;
-  case TokenType::NEW_LINE:
-    buffer.append("\n");
   default:
     break;
   }
 
-  std::cout << buffer << ' ';
+  std::cout << buffer << (token == TokenType::NEW_LINE ? '\n' : ' ');
 }

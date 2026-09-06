@@ -4,12 +4,12 @@
       "type": "lldb-dap",
       "request": "launch",
       "name": "Launch",
-      "program": "${workspaceFolder}/build/zorax",
+      "program": "${workspaceFolder}/builddir/zorax",
       "args": [],
       "env": [],
       "cwd": "${workspaceFolder}",
-      "preLaunchTask": "Meson: Build all targets"
+      "preLaunchTask": "Meson: Build zorax:executable"
     }
-  
+    
   ]
 }

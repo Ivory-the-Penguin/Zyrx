@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Token.hpp"
-#include <variant>
 #include <vector>
 
 class Lexer {
@@ -18,7 +17,7 @@ private:
   void AddToken(std::string_view literal);
   void AddToken(double literal);
 
-  char PeekChar() const;
+  char PeekChar();
 
   uint32_t lineNumber_;
   uint32_t column_;
