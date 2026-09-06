@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <string>
+#include <variant>
 
 enum class TokenType : int8_t {
   UNKNOWN = -1,
@@ -35,11 +36,11 @@ struct Token {
   uint32_t column;
 
   TokenType token;
-
-  std::string lexeme;
-  std::string comment;
-  std::string literal;
   DataType type;
+
+  std::string_view lexeme; // String views to the source code (which we keep)
+  std::string_view comment;
+  std::variant<std::monostate, int64_t, double, std::string> literal;
 
   void Output();
 };

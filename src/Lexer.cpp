@@ -4,12 +4,12 @@
 
 const std::vector<Token> &Lexer::GetTokens() const { return tokens_; }
 
-void Lexer::GetTokensFromLine(std::string string) {
+void Lexer::GetTokensFromSource() {
   column_ = 0;
 
-  while (column_ < string.size()) {
+  while (column_ < source_.size()) {
     { // SINGLE CHARACTER TOKENS
-      switch (string[column_]) {
+      switch (source_[column_]) {
       case '(':
         AddToken(TokenType::LEFT_PARENTHESIS);
         break;
@@ -31,11 +31,14 @@ void Lexer::GetTokensFromLine(std::string string) {
       case '=':
         AddToken(TokenType::EQUAL);
         break;
+      case '\n':
+        AddToken(TokenType::NEW_LINE);
+        lineNumber_++;
       }
     }
 
     column_++;
   }
 
-  AddToken(TokenType::NEW_LINE);
+  AddToken(TokenType::END_OF_FILE);
 }

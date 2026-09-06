@@ -5,8 +5,11 @@
 
 class Lexer {
 public:
+  Lexer(std::string source) : source_(source) {}
+
   const std::vector<Token> &GetTokens() const;
-  void GetTokensFromLine(std::string string);
+
+  void GetTokensFromSource();
 
 private:
   void AddToken(TokenType token) {
@@ -26,5 +29,6 @@ private:
 
   uint32_t lineNumber_;
   uint32_t column_;
+  std::string source_;
   std::vector<Token> tokens_;
 };
