@@ -9,37 +9,31 @@ void Lexer::GetTokensFromSource() {
   lineNumber_ = 0;
 
   while (column_ < source_.size()) {
-    { // SINGLE CHARACTER TOKENS
-      switch (source_[column_]) {
-      case '(':
-        AddToken(TokenType::LEFT_PARENTHESIS);
-        break;
-      case ')':
-        AddToken(TokenType::RIGHT_PARENTHESIS);
-        break;
-      case '{':
-        AddToken(TokenType::LEFT_BRACE);
-        break;
-      case '}':
-        AddToken(TokenType::RIGHT_BRACE);
-        break;
-      case '.':
-        AddToken(TokenType::PERIOD);
-        break;
-      case ':':
-        if (PeekChar() == '=') {
-          AddToken(TokenType::COLON_EQUAL);
-        } else {
-          AddToken(TokenType::COLON);
-        }
-        break;
-      case '=':
-        AddToken(TokenType::EQUAL);
-        break;
-      case '\n':
-        AddToken(TokenType::NEW_LINE);
-        lineNumber_++;
-      }
+    switch (source_[column_]) {
+    case '(':
+      AddToken(TokenType::LEFT_PARENTHESIS);
+      break;
+    case ')':
+      AddToken(TokenType::RIGHT_PARENTHESIS);
+      break;
+    case '{':
+      AddToken(TokenType::LEFT_BRACE);
+      break;
+    case '}':
+      AddToken(TokenType::RIGHT_BRACE);
+      break;
+    case '.':
+      AddToken(TokenType::PERIOD);
+      break;
+    case ':':
+      AddToken((PeekChar() == '=' ? TokenType::COLON_EQUAL : TokenType::COLON));
+      break;
+    case '=':
+      AddToken((PeekChar() == '=' ? TokenType::EQUAL_EQUAL : TokenType::EQUAL));
+      break;
+    case '\n':
+      AddToken(TokenType::NEW_LINE);
+      lineNumber_++;
     }
 
     column_++;
