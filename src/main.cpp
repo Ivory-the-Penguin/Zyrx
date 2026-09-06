@@ -2,12 +2,10 @@
 #include <iostream>
 
 int main() {
-  Lexer lexer;
-
-  lexer.SetSource("\\\\ This is a comment!\n"
-                  "main <- proc() int {\n"
-                  "\treturn 0\n"
-                  "}");
+  Lexer lexer("\\\\ This is a comment!\n"
+              "main <- proc() int {\n"
+              "\treturn 0\n"
+              "}");
 
   lexer.GetTokensFromSource();
 
