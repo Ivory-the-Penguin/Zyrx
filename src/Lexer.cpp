@@ -42,3 +42,51 @@ void Lexer::GetTokensFromSource() {
 
   AddToken(TokenType::END_OF_FILE);
 }
+
+void Lexer::AddToken(TokenType token) {
+  tokens_.push_back(Token{
+      .line = lineNumber_,
+      .column = column_,
+      .token = token,
+      .type = DataType::NONE,
+      .lexeme = "",
+      .comment = "",
+      .literal = std::monostate(),
+  });
+};
+
+void Lexer::AddToken(int literal) {
+  tokens_.push_back(Token{
+      .line = lineNumber_,
+      .column = column_,
+      .token = TokenType::LITERAL,
+      .type = DataType::INT,
+      .lexeme = "",
+      .comment = "",
+      .literal = literal,
+  });
+}
+
+void Lexer::AddToken(std::string_view literal) {
+  tokens_.push_back(Token{
+      .line = lineNumber_,
+      .column = column_,
+      .token = TokenType::LITERAL,
+      .type = DataType::CSTRING,
+      .lexeme = "",
+      .comment = "",
+      .literal = literal,
+  });
+}
+
+void Lexer::AddToken(double literal) {
+  tokens_.push_back(Token{
+      .line = lineNumber_,
+      .column = column_,
+      .token = TokenType::LITERAL,
+      .type = DataType::FLOAT,
+      .lexeme = "",
+      .comment = "",
+      .literal = literal,
+  });
+}

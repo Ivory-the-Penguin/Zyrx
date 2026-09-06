@@ -10,7 +10,6 @@ enum class TokenType : int8_t {
   NEW_LINE,
   IDENTIFIER,
   CONST_DEF,
-  STRING,
   PROCEDURE,
   FUNCTION,
   PERIOD,
@@ -22,10 +21,12 @@ enum class TokenType : int8_t {
   COMMENT,
   COLON,
   EQUAL,
+  LITERAL,
   COUNT
 };
 
 enum class DataType : int8_t {
+  NONE = -1,
   INT,
   FLOAT,
   CSTRING,
@@ -40,7 +41,7 @@ struct Token {
 
   std::string_view lexeme; // String views to the source code (which we keep)
   std::string_view comment;
-  std::variant<std::monostate, int64_t, double, std::string> literal;
+  std::variant<std::monostate, int64_t, double, std::string_view> literal;
 
   void Output();
 };

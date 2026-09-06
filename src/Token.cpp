@@ -11,8 +11,8 @@ std::string TokenTypeToString(TokenType token) {
     return "IDENTIFIER";
   case TokenType::CONST_DEF:
     return "<-";
-  case TokenType::STRING:
-    return "STRING";
+  case TokenType::LITERAL:
+    return "LITERAL";
   case TokenType::PROCEDURE:
     return "proc";
   case TokenType::FUNCTION:
@@ -47,6 +47,8 @@ std::string TokenTypeToString(TokenType token) {
 
 std::string DataTypeToString(DataType type) {
   switch (type) {
+  case DataType::NONE:
+    return "NONE";
   case DataType::INT:
     return "INTEGER";
   case DataType::FLOAT:

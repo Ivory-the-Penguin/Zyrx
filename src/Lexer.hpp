@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Token.hpp"
+#include <variant>
 #include <vector>
 
 class Lexer {
@@ -12,13 +13,10 @@ public:
   void GetTokensFromSource();
 
 private:
-  void AddToken(TokenType token) {
-    tokens_.push_back({
-        .line = lineNumber_,
-        .column = column_,
-        .token = token,
-    });
-  };
+  void AddToken(TokenType token);
+  void AddToken(int literal);
+  void AddToken(std::string_view literal);
+  void AddToken(double literal);
 
   char PeekChar() const {
     if (column_ + 1 < source_.size()) {
