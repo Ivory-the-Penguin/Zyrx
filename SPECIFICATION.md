@@ -3,6 +3,13 @@ The specification for the Zyrx programming language, and serves as a sort of tut
 
 ***For major version*** `BetaBeta`
 
+## BetaBeta Limitations
+Here is a list of some limitations for BetaBeta:
+* Stack only
+* Not full planned feature set (Like a macro system)
+* No standard library
+* Semicolon is mandatory
+
 ## File Type
 All Zyrx applications will be in a single file, with the extension of `.zrx`. The transpiled C code will also be in one file. By default it compiles straight to an executable, but you have an option to keep the C file with the `--keep-c` flag.
 
@@ -10,7 +17,7 @@ All Zyrx applications will be in a single file, with the extension of `.zrx`. Th
 Heres a simple bare bones programming.
 ```
 main <- proc() int {
-  return 0
+  return 0;
 }
 ```
 
@@ -30,7 +37,7 @@ You wrap code inside functions and procedures using curly braces (similar to C a
 
 the `return` keyword is for returning values from a function or a procedure, followed by the value. 
 
-You don't need to use semicolons in here, but you do need to use new lines.
+You use semicolons to end a statement (**likely to change**). 
 
 ## Normal operators
 This is the same as it is with all languages:

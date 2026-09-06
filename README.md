@@ -19,8 +19,8 @@ An example of simple Zyrx code to C code
 Zyrx code
 ```
 libc <- foreign {
-  puts <- proc(string s) int
-  sqrt <- func(float x) float
+  puts <- proc(string s) int;
+  sqrt <- func(float x) float;
 }
 
 Vector <- struct {
@@ -34,7 +34,7 @@ Vector <- extension {
   }
 
   length <- func() {
-    return libc.sqrt(self.x * self.x + self.y * self.y)
+    return libc.sqrt(self.x * self.x + self.y * self.y);
   }
 }
 ```

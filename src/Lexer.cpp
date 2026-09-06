@@ -31,6 +31,7 @@ void Lexer::GetTokensFromSource() {
       break;
     case ';':
       AddToken(TokenType::SEMICOLON);
+      break;
     case ':':
       AddToken((Match('=') ? TokenType::COLON_EQUAL : TokenType::COLON));
       break;
@@ -39,13 +40,12 @@ void Lexer::GetTokensFromSource() {
       break;
     case '-':
       if (Match('-')) {
-        uint64_t start = Advance();
+        uint64_t start = location_;
         while (PeekChar() != '\n' && PeekChar() != '\0') {
           Advance();
         }
 
-        std::string_view view(source_.begin() + start,
-                              source_.begin() + location_);
+        std::string_view view(source_.data() + start, location_ - start + 1);
 
         while (!view.empty() && std::isspace(view.front())) {
           view.remove_prefix(1);
@@ -164,7 +164,7 @@ char Lexer::PeekChar() const {
 
 bool Lexer::Match(char match) {
   if (PeekChar() == match) {
-    Advance();
+    Advance(2);
     return true;
   }
 
@@ -188,5 +188,5 @@ std::string_view Lexer::ConsumeLexeme() {
     Advance();
   }
 
-  return std::string_view(source_.begin() + start, source_.begin() + Advance());
+  return std::string_view(source_.data() + start, location_ - start + 1);
 }
