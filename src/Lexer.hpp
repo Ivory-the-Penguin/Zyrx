@@ -17,7 +17,7 @@ private:
   void AddToken(std::string_view literal);
   void AddToken(double literal);
 
-  char PeekChar();
+  char PeekChar(char match = '\0');
 
   uint32_t lineNumber_;
   uint32_t column_;

@@ -26,10 +26,21 @@ void Lexer::GetTokensFromSource() {
       AddToken(TokenType::PERIOD);
       break;
     case ':':
-      AddToken((PeekChar() == '=' ? TokenType::COLON_EQUAL : TokenType::COLON));
+      AddToken((PeekChar('=') ? TokenType::COLON_EQUAL : TokenType::COLON));
       break;
     case '=':
-      AddToken((PeekChar() == '=' ? TokenType::EQUAL_EQUAL : TokenType::EQUAL));
+      AddToken((PeekChar('=') ? TokenType::EQUAL_CMP : TokenType::EQUAL));
+      break;
+    case '-':
+      AddToken(TokenType::MINUS);
+      break;
+    case '<':
+      if (PeekChar('-')) {
+        AddToken(TokenType::CONST_DEF);
+      } else {
+        AddToken(
+            (PeekChar('=') ? TokenType::LESS_EQUAL_CMP : TokenType::LESS_CMP));
+      }
       break;
     case '\n':
       AddToken(TokenType::NEW_LINE);
@@ -90,9 +101,13 @@ void Lexer::AddToken(double literal) {
   });
 }
 
-char Lexer::PeekChar() {
+char Lexer::PeekChar(char match) {
   if (column_ + 1 < source_.size()) {
-    return source_[++column_];
+    if (match == source_[column_ + 1]) {
+      return source_[++column_];
+    } else {
+      return '\0';
+    }
   }
   return '\0';
 }
