@@ -47,6 +47,9 @@ void Lexer::GetTokensFromSource() {
         while (std::isspace(view.front())) {
           view.remove_prefix(1);
         }
+        while (std::isspace(view.back())) {
+          view.remove_suffix(1);
+        }
 
         AddComment(view);
       } else {
