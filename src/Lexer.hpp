@@ -27,6 +27,7 @@ private:
   int64_t Advance(int64_t n = 1);
 
   std::string_view ConsumeLexeme();
+  std::string_view ConsumeComment();
 
   uint64_t lineNumber_;
   uint64_t column_;

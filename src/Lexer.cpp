@@ -1,5 +1,6 @@
 #include "Lexer.hpp"
 #include "Token.hpp"
+#include <cassert>
 #include <cctype>
 #include <string>
 #include <string_view>
@@ -40,21 +41,7 @@ void Lexer::GetTokensFromSource() {
       break;
     case '-':
       if (Match('-')) {
-        uint64_t start = location_;
-        while (PeekChar() != '\n' && PeekChar() != '\0') {
-          Advance();
-        }
-
-        std::string_view view(source_.data() + start, location_ - start + 1);
-
-        while (!view.empty() && std::isspace(view.front())) {
-          view.remove_prefix(1);
-        }
-        while (!view.empty() && std::isspace(view.back())) {
-          view.remove_suffix(1);
-        }
-
-        AddComment(view);
+        AddComment(ConsumeComment());
       } else {
         AddToken(TokenType::MINUS);
       }
@@ -76,7 +63,6 @@ void Lexer::GetTokensFromSource() {
         AddIdentifier(ConsumeLexeme());
       }
     }
-
     Advance();
   }
 
@@ -164,7 +150,7 @@ char Lexer::PeekChar() const {
 
 bool Lexer::Match(char match) {
   if (PeekChar() == match) {
-    Advance(2);
+    Advance();
     return true;
   }
 
@@ -179,9 +165,7 @@ int64_t Lexer::Advance(int64_t n) {
 }
 
 std::string_view Lexer::ConsumeLexeme() {
-  if (!std::isalpha(source_[location_])) {
-    return nullptr;
-  }
+  assert(std::isalpha(source_[location_]));
 
   uint64_t start = location_;
   while (Match('_') || std::isalnum(PeekChar())) {
@@ -189,4 +173,22 @@ std::string_view Lexer::ConsumeLexeme() {
   }
 
   return std::string_view(source_.data() + start, location_ - start + 1);
+}
+
+std::string_view Lexer::ConsumeComment() {
+  uint64_t start = location_;
+  while (PeekChar() != '\n' && PeekChar() != '\0') {
+    Advance();
+  }
+
+  std::string_view view(source_.data() + start, location_ - start + 1);
+
+  while (!view.empty() && std::isspace(view.front())) {
+    view.remove_prefix(1);
+  }
+  while (!view.empty() && std::isspace(view.back())) {
+    view.remove_suffix(1);
+  }
+
+  return view;
 }
