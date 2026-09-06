@@ -20,9 +20,9 @@ private:
     });
   };
 
-  char PeekChar(const std::string &string) const {
-    if (column_ + 1 < string.size()) {
-      return string[column_ + 1];
+  char PeekChar() const {
+    if (column_ + 1 < source_.size()) {
+      return source_[column_ + 1];
     }
     return '\0';
   }
