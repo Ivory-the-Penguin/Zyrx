@@ -8,11 +8,12 @@
 const std::vector<Token> &Lexer::GetTokens() const { return tokens_; }
 
 void Lexer::GetTokensFromSource() {
-  column_ = 0;
+  location_ = 0;
   lineNumber_ = 0;
+  column_ = 0;
 
-  while (column_ < source_.size()) {
-    switch (source_[column_]) {
+  while (location_ < source_.size()) {
+    switch (source_[location_]) {
     case '(':
       AddToken(TokenType::LEFT_PARENTHESIS);
       break;
@@ -36,13 +37,13 @@ void Lexer::GetTokensFromSource() {
       break;
     case '-':
       if (Match('-')) {
-        uint64_t start = ++column_;
+        uint64_t start = Advance();
         while (PeekChar() != '\n' && PeekChar() != '\0') {
-          column_++;
+          Advance();
         }
 
         std::string_view view(source_.begin() + start,
-                              source_.begin() + column_--);
+                              source_.begin() + location_ - 1);
 
         while (!view.empty() && std::isspace(view.front())) {
           view.remove_prefix(1);
@@ -67,9 +68,10 @@ void Lexer::GetTokensFromSource() {
     case '\n':
       AddToken(TokenType::NEW_LINE);
       lineNumber_++;
+      column_ = 0;
     }
 
-    column_++;
+    Advance();
   }
 
   AddToken(TokenType::END_OF_FILE);
@@ -136,30 +138,37 @@ void Lexer::AddComment(std::string_view comment) {
 }
 
 char Lexer::PeekChar() const {
-  if (column_ + 1 < source_.size()) {
-    return source_[column_ + 1];
+  if (location_ + 1 < source_.size()) {
+    return source_[location_ + 1];
   }
   return '\0';
 }
 
 bool Lexer::Match(char match) {
   if (PeekChar() == match) {
-    column_++;
+    Advance();
     return true;
   }
 
   return false;
 }
 
+int64_t Lexer::Advance(int64_t n) {
+  column_ += n;
+  location_ += n;
+
+  return location_;
+}
+
 std::string_view Lexer::ConsumeLexeme() {
-  if (!std::isalpha(source_[column_])) {
+  if (!std::isalpha(source_[location_])) {
     return nullptr;
   }
 
-  uint64_t start = column_;
+  uint64_t start = location_;
   while (std::isalnum(PeekChar())) {
-    column_++;
+    Advance();
   }
 
-  return std::string_view(source_.begin() + start, source_.begin() + column_);
+  return std::string_view(source_.begin() + start, source_.begin() + location_);
 }

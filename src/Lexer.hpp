@@ -22,10 +22,14 @@ private:
 
   char PeekChar() const;
   bool Match(char match);
+  int64_t Advance(int64_t n = 1);
+
   std::string_view ConsumeLexeme();
 
   uint64_t lineNumber_;
   uint64_t column_;
+  uint64_t location_;
+
   std::string source_;
   std::vector<Token> tokens_;
 };
