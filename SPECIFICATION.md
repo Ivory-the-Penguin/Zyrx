@@ -1,10 +1,10 @@
-# Zorax specification
-The specification for the Zorax programming language, and serves as a sort of tutorial as well. 
+# Zyrx specification
+The specification for the Zyrx programming language, and serves as a sort of tutorial as well. 
 
 ***For major version*** `BetaBeta`
 
 ## File Type
-All Zorax applications will be in a single file, with the extension of `.zrx`. The transpiled C code will also be in one file. By default it compiles straight to an executable, but you have an option to keep the C file with the `--keep-c` flag.
+All Zyrx applications will be in a single file, with the extension of `.zrx`. The transpiled C code will also be in one file. By default it compiles straight to an executable, but you have an option to keep the C file with the `--keep-c` flag.
 
 ## Basic program
 Heres a simple bare bones programming.
@@ -51,7 +51,7 @@ The order of operations goes as following:
 If they are in the same tier, it's determined by the order instead, so `10 * 5 / 2` would be 25. You can also change the order of operations with parentheses
 
 ## Functions and Procedures
-Unlike in other languages, Zorax strictly distinguishes procedures (`proc` keyword) and functions (`func` keyword).
+Unlike in other languages, Zyrx strictly distinguishes procedures (`proc` keyword) and functions (`func` keyword).
 
 Procedures have the following rules:
 * You can use pointers

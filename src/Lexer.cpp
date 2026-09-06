@@ -1,5 +1,5 @@
 #include "Lexer.hpp"
-#include "src/Token.hpp"
+#include "Token.hpp"
 #include <cctype>
 #include <string>
 #include <string_view>
