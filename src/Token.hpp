@@ -45,8 +45,8 @@ enum class DataType : int8_t {
 };
 
 struct Token {
-  uint32_t line;
-  uint32_t column;
+  uint64_t line;
+  uint64_t column;
 
   TokenType token;
   DataType type;

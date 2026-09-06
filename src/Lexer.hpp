@@ -22,8 +22,8 @@ private:
 
   char PeekChar(char match = '\0');
 
-  uint32_t lineNumber_;
-  uint32_t column_;
+  uint64_t lineNumber_;
+  uint64_t column_;
   std::string source_;
   std::vector<Token> tokens_;
 };

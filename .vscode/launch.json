@@ -8,8 +8,7 @@
       "args": [],
       "env": [],
       "cwd": "${workspaceFolder}",
-      "preLaunchTask": "Meson: Build zorax:executable"
+      "preLaunchTask": "Meson: Build all targets"
     }
-    
   ]
 }

@@ -1,5 +1,6 @@
 #include "Lexer.hpp"
 #include "src/Token.hpp"
+#include <cctype>
 #include <string>
 #include <string_view>
 #include <variant>
@@ -35,7 +36,19 @@ void Lexer::GetTokensFromSource() {
       break;
     case '-':
       if (PeekChar('-')) {
-        AddToken(TokenType::COMMENT);
+        uint64_t start = ++column_;
+        while (PeekChar() != '\n') {
+          column_++;
+        }
+
+        std::string_view view(source_.begin() + start,
+                              source_.begin() + column_--);
+
+        while (std::isspace(view.front())) {
+          view.remove_prefix(1);
+        }
+
+        AddComment(view);
       } else {
         AddToken(TokenType::MINUS);
       }
@@ -121,6 +134,10 @@ void Lexer::AddComment(std::string_view comment) {
 
 char Lexer::PeekChar(char match) {
   if (column_ + 1 < source_.size()) {
+    if (match == '\0') {
+      return source_[++column_];
+    }
+
     if (match == source_[column_ + 1]) {
       return source_[++column_];
     } else {
