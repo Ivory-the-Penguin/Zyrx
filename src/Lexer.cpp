@@ -29,13 +29,13 @@ void Lexer::GetTokensFromSource() {
       AddToken(TokenType::PERIOD);
       break;
     case ':':
-      AddToken((PeekChar('=') ? TokenType::COLON_EQUAL : TokenType::COLON));
+      AddToken((Match('=') ? TokenType::COLON_EQUAL : TokenType::COLON));
       break;
     case '=':
-      AddToken((PeekChar('=') ? TokenType::EQUAL_CMP : TokenType::EQUAL));
+      AddToken((Match('=') ? TokenType::EQUAL_CMP : TokenType::EQUAL));
       break;
     case '-':
-      if (PeekChar('-')) {
+      if (Match('-')) {
         uint64_t start = ++column_;
         while (PeekChar() != '\n') {
           column_++;
@@ -54,11 +54,11 @@ void Lexer::GetTokensFromSource() {
       }
       break;
     case '<':
-      if (PeekChar('-')) {
+      if (Match('-')) {
         AddToken(TokenType::CONST_DEF);
       } else {
         AddToken(
-            (PeekChar('=') ? TokenType::LESS_EQUAL_CMP : TokenType::LESS_CMP));
+            (Match('=') ? TokenType::LESS_EQUAL_CMP : TokenType::LESS_CMP));
       }
       break;
     case '\n':
@@ -132,17 +132,18 @@ void Lexer::AddComment(std::string_view comment) {
   });
 }
 
-char Lexer::PeekChar(char match) {
+char Lexer::PeekChar() const {
   if (column_ + 1 < source_.size()) {
-    if (match == '\0') {
-      return source_[++column_];
-    }
-
-    if (match == source_[column_ + 1]) {
-      return source_[++column_];
-    } else {
-      return '\0';
-    }
+    return source_[column_ + 1];
   }
   return '\0';
+}
+
+bool Lexer::Match(char match) {
+  if (PeekChar() == match) {
+    column_++;
+    return true;
+  }
+
+  return false;
 }

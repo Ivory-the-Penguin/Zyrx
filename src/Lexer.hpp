@@ -20,7 +20,8 @@ private:
 
   void AddComment(std::string_view comment);
 
-  char PeekChar(char match = '\0');
+  char PeekChar() const;
+  bool Match(char match);
 
   uint64_t lineNumber_;
   uint64_t column_;
