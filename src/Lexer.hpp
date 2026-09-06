@@ -22,6 +22,7 @@ private:
 
   char PeekChar() const;
   bool Match(char match);
+  std::string_view ConsumeLexeme();
 
   uint64_t lineNumber_;
   uint64_t column_;

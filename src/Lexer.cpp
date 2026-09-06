@@ -150,3 +150,16 @@ bool Lexer::Match(char match) {
 
   return false;
 }
+
+std::string_view Lexer::ConsumeLexeme() {
+  if (!std::isalpha(source_[column_])) {
+    return nullptr;
+  }
+
+  uint64_t start = column_;
+  while (std::isalnum(PeekChar())) {
+    column_++;
+  }
+
+  return std::string_view(source_.begin() + start, source_.begin() + column_);
+}
