@@ -65,7 +65,7 @@ void Lexer::GetTokensFromSource() {
         bool foundPeroid = false;
         uint64_t start = location_;
 
-        while (std::isdigit(PeekChar()) || source_[PeekChar()] == '.') {
+        while (std::isdigit(PeekChar()) || PeekChar() == '.') {
           Advance();
 
           if (source_[location_] == '.') {
@@ -83,6 +83,10 @@ void Lexer::GetTokensFromSource() {
 
         if (!foundPeroid) {
           AddLiteral(std::stoi(
+              std::string_view(source_.data() + start, location_ - start + 1)
+                  .data()));
+        } else {
+          AddLiteral(std::stof(
               std::string_view(source_.data() + start, location_ - start + 1)
                   .data()));
         }
@@ -220,7 +224,7 @@ std::string_view Lexer::ConsumeComment() {
     Advance();
   }
 
-  std::string_view view(source_.data() + start, location_ - start + 1);
+  std::string_view view(source_.data() + start + 1, location_ - start + 1);
 
   while (!view.empty() && std::isspace(view.front())) {
     view.remove_prefix(1);

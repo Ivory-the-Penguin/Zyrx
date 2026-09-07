@@ -119,6 +119,9 @@ void Token::Output() {
     case DataType::INT:
       buffer.append(std::to_string(std::get<int>(literal)));
       break;
+    case DataType::FLOAT:
+      buffer.append(std::to_string(std::get<float>(literal)));
+      break;
     default:
       break;
     }
