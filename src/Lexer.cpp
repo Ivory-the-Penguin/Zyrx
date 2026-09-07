@@ -61,7 +61,18 @@ void Lexer::GetTokensFromSource() {
       break;
     default:
       if (std::isalpha(source_[location_])) {
-        AddIdentifier(ConsumeLexeme());
+        std::string_view lexeme = ConsumeLexeme();
+        bool isKeyword = false;
+        for (auto i : reservedKeywords_) {
+          if (i.first == lexeme) {
+            isKeyword = true;
+            AddToken(i.second);
+          }
+        }
+
+        if (!isKeyword) {
+          AddIdentifier(lexeme);
+        }
       }
     }
     Advance();

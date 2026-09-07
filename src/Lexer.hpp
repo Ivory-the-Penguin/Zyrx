@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Token.hpp"
+#include <string_view>
+#include <unordered_map>
 #include <vector>
 
 class Lexer {
@@ -35,4 +37,8 @@ private:
 
   std::string source_;
   std::vector<Token> tokens_;
+  std::unordered_map<std::string_view, TokenType> reservedKeywords_ = {
+      {"proc", TokenType::PROCEDURE},
+      {"func", TokenType::FUNCTION},
+      {"return", TokenType::RETURN}};
 };

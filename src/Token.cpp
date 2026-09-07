@@ -61,6 +61,8 @@ std::string TokenTypeToString(TokenType token) {
     return ";";
   case TokenType::LITERAL:
     return "LITERAL";
+  case TokenType::RETURN:
+    return "return";
 
   case TokenType::UNKNOWN:
     return "UNKNOWN";
