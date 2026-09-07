@@ -58,6 +58,7 @@ void Lexer::GetTokensFromSource() {
       AddToken(TokenType::NEW_LINE);
       lineNumber_++;
       column_ = 0;
+      break;
     default:
       if (std::isalpha(source_[location_])) {
         AddIdentifier(ConsumeLexeme());
