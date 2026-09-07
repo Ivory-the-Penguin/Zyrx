@@ -17,8 +17,8 @@ private:
   void AddToken(TokenType token);
 
   void AddLiteral(int literal);
+  void AddLiteral(float literal);
   void AddLiteral(std::string_view literal);
-  void AddLiteral(double literal);
 
   void AddComment(std::string_view comment);
 

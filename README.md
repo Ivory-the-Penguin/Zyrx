@@ -42,11 +42,11 @@ Vector <- extension {
 And the C code:
 ```c
 int puts(const char *s);
-double sqrt(double arg);
+float sqrt(float arg);
 
 typedef struct {
-  double x;
-  double y;
+  float x;
+  float y;
 } Vector;
 
 void Vector_print(Vector* self) { 
@@ -64,7 +64,7 @@ There are no high-level types, since it's a systems language. This means we don'
 
 It's also Data Oriented, which means it works with mostly structs. That means C isn't trying to imitate an OOP language!
 
-There's also seamless C interop, since it's compiled to C. All types in Zyrx also only correspond to their 64-bit C counter part. **This is subject to change.**
+There's also seamless C interop, since it's compiled to C. All types in Zyrx also only correspond to their 32-bit C counter part. **This is subject to change.**
 
 ---
 ## The plan

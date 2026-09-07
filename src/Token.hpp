@@ -55,7 +55,7 @@ struct Token {
 
   std::string_view lexeme; // String views to the source code (which we keep)
   std::string_view comment;
-  std::variant<std::monostate, int64_t, double, std::string_view> literal;
+  std::variant<std::monostate, int, float, std::string_view> literal;
 
   void Output();
 };

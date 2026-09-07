@@ -1,5 +1,7 @@
 #include "Token.hpp"
+#include <cassert>
 #include <iostream>
+#include <variant>
 
 std::string TokenTypeToString(TokenType token) {
   switch (token) {
@@ -112,6 +114,14 @@ void Token::Output() {
   if (type != DataType::NONE) {
     buffer.append("(");
     buffer.append(DataTypeToString(type));
+    buffer.append(", ");
+    switch (type) {
+    case DataType::INT:
+      buffer.append(std::to_string(std::get<int>(literal)));
+      break;
+    default:
+      break;
+    }
     buffer.append(")");
   }
 

@@ -2,6 +2,7 @@
 #include "Token.hpp"
 #include <cassert>
 #include <cctype>
+#include <iostream>
 #include <string>
 #include <string_view>
 #include <variant>
@@ -60,8 +61,34 @@ void Lexer::GetTokensFromSource() {
       column_ = 0;
       break;
     default:
-      if (std::isalpha(source_[location_])) {
+      if (std::isdigit(source_[location_])) {
+        bool foundPeroid = false;
+        uint64_t start = location_;
+
+        while (std::isdigit(PeekChar()) || source_[PeekChar()] == '.') {
+          Advance();
+
+          if (source_[location_] == '.') {
+            foundPeroid = true;
+
+            if (!std::isdigit(PeekChar())) {
+              assert(true); // TRAILING PEROID NOT ALLOWED
+            }
+          }
+        }
+
+        if (!std::isspace(source_[location_])) {
+          assert(true); // INVALID INT/FLOAT CONSTANT
+        }
+
+        if (!foundPeroid) {
+          AddLiteral(std::stoi(
+              std::string_view(source_.data() + start, location_ - start + 1)
+                  .data()));
+        }
+      } else if (std::isalpha(source_[location_])) {
         std::string_view lexeme = ConsumeLexeme();
+
         bool isKeyword = false;
         for (auto i : reservedKeywords_) {
           if (i.first == lexeme) {
@@ -117,7 +144,7 @@ void Lexer::AddLiteral(std::string_view literal) {
   });
 }
 
-void Lexer::AddLiteral(double literal) {
+void Lexer::AddLiteral(float literal) {
   tokens_.push_back(Token{
       .line = lineNumber_,
       .column = column_,
