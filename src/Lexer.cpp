@@ -2,7 +2,6 @@
 #include "Token.hpp"
 #include <cassert>
 #include <cctype>
-#include <iostream>
 #include <string>
 #include <string_view>
 #include <variant>
@@ -62,34 +61,7 @@ void Lexer::GetTokensFromSource() {
       break;
     default:
       if (std::isdigit(source_[location_])) {
-        bool foundPeroid = false;
-        uint64_t start = location_;
-
-        while (std::isdigit(PeekChar()) || PeekChar() == '.') {
-          Advance();
-
-          if (source_[location_] == '.') {
-            foundPeroid = true;
-
-            if (!std::isdigit(PeekChar())) {
-              assert(true); // TRAILING PEROID NOT ALLOWED
-            }
-          }
-        }
-
-        if (!std::isspace(source_[location_])) {
-          assert(true); // INVALID INT/FLOAT CONSTANT
-        }
-
-        if (!foundPeroid) {
-          AddLiteral(std::stoi(
-              std::string_view(source_.data() + start, location_ - start + 1)
-                  .data()));
-        } else {
-          AddLiteral(std::stof(
-              std::string_view(source_.data() + start, location_ - start + 1)
-                  .data()));
-        }
+        ConsumeIntAndFloatLiteral();
       } else if (std::isalpha(source_[location_])) {
         std::string_view lexeme = ConsumeLexeme();
 
@@ -234,4 +206,37 @@ std::string_view Lexer::ConsumeComment() {
   }
 
   return view;
+}
+
+void Lexer::ConsumeIntAndFloatLiteral() {
+  assert(std::isdigit(source_[location_])); // HAS TO BE ON A INTEGER
+
+  bool foundPeroid = false;
+  uint64_t start = location_;
+
+  while (std::isdigit(PeekChar()) || PeekChar() == '.') {
+    Advance();
+
+    if (source_[location_] == '.') {
+      foundPeroid = true;
+
+      if (!std::isdigit(PeekChar())) {
+        assert(false); // TRAILING PEROID NOT ALLOWED
+      }
+    }
+  }
+
+  if (!std::isspace(source_[location_])) {
+    assert(false); // INVALID INT/FLOAT CONSTANT
+  }
+
+  if (!foundPeroid) {
+    AddLiteral(std::stoi(
+        std::string_view(source_.data() + start, location_ - start + 1)
+            .data()));
+  } else {
+    AddLiteral(std::stof(
+        std::string_view(source_.data() + start, location_ - start + 1)
+            .data()));
+  }
 }

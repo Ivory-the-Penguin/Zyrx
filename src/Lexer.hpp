@@ -30,6 +30,7 @@ private:
 
   std::string_view ConsumeLexeme();
   std::string_view ConsumeComment();
+  void ConsumeIntAndFloatLiteral();
 
   uint64_t lineNumber_;
   uint64_t column_;
