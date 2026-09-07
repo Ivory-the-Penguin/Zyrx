@@ -1,7 +1,6 @@
 #include "Token.hpp"
 #include <cassert>
 #include <iostream>
-#include <variant>
 
 std::string TokenTypeToString(TokenType token) {
   switch (token) {

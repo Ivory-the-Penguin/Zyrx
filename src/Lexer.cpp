@@ -226,7 +226,7 @@ void Lexer::ConsumeIntAndFloatLiteral() {
     }
   }
 
-  if (!std::isspace(source_[location_])) {
+  if (std::isalpha(source_[location_])) {
     assert(false); // INVALID INT/FLOAT CONSTANT
   }
 

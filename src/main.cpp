@@ -4,8 +4,8 @@
 int main() {
   Lexer lexer("-- This is a comment!\n"
               "main <- proc() int {\n"
-              "\tsome_var := 123.456;\n"
-              "\treturn 0;\n"
+              "  some_var := 123.456;\n"
+              "  return 0;\n"
               "}");
 
   lexer.GetTokensFromSource();
