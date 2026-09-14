@@ -4,9 +4,9 @@
       "type": "lldb",
       "request": "launch",
       "name": "Launch",
-      "program": "${workspaceFolder}/builddir/zyrx",
-      "args": [],
-      "cwd": "${workspaceFolder}",
+      "targetCreateCommands": [
+        "target create ${workspaceFolder}/builddir/zyrx"
+      ],
       "preLaunchTask": "Meson: Build all targets"
     }
 
