@@ -23,9 +23,10 @@
   void list_##TYPE##_set_capacity(list_##TYPE##_t *list, uint64_t capacity) {  \
     assert(list->length <= capacity &&                                         \
            "Capacity is smaller than the list length!");                       \
+    assert(capacity > 0 && "Can't set capacity to 0!");                        \
                                                                                \
     list->data = (TYPE *)realloc(list->data, capacity * sizeof(TYPE));         \
-    assert(list->data != nullptr && capacity != 0 && "Allocation failed!");    \
+    assert(list->data != nullptr && "Allocation failed!");                     \
                                                                                \
     list->capacity = capacity;                                                 \
                                                                                \
@@ -44,7 +45,7 @@
   }                                                                            \
                                                                                \
   void list_##TYPE##_free(list_##TYPE##_t *list) {                             \
-    assert(list->data != nullptr);                                             \
+    assert(list->data != nullptr && "Data can't be null!");                    \
                                                                                \
     free((void *)list->data);                                                  \
     list->length = 0;                                                          \
@@ -52,12 +53,12 @@
   }                                                                            \
                                                                                \
   void list_##TYPE##_pop(list_##TYPE##_t *list) {                              \
-    assert(list->length > 0);                                                  \
+    assert(list->length > 0 && "Popping when the list is empty !");            \
                                                                                \
     list->data[--list->length] = (TYPE){};                                     \
                                                                                \
-    if (list->length < list->capacity / 4 && list->length > 4) {               \
-      list_##TYPE##_set_capacity(list, list->length * 2);                      \
+    if (list->length < list->capacity / 4 && list->capacity > 8) {             \
+      list_##TYPE##_set_capacity(list, list->capacity / 2);                    \
     }                                                                          \
   }
 
