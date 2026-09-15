@@ -30,13 +30,18 @@
            "Capacity is smaller than the list length!");                       \
     assert(capacity > 0 && "Can't set capacity to 0!");                        \
                                                                                \
-    list->data = (TYPE *)realloc(list->data, capacity * sizeof(TYPE));         \
-    assert(list->data != NULL && "Allocation failed!");                        \
+    TYPE *temp_data = (TYPE *)realloc(list->data, capacity * sizeof(TYPE));    \
+    if (temp_data == NULL) {                                                   \
+      assert(false && "Allocation failed!");                                   \
+      exit(1);                                                                 \
+    }                                                                          \
                                                                                \
+    list->data = temp_data;                                                    \
     list->capacity = capacity;                                                 \
                                                                                \
     memset(list->data + list->length, 0,                                       \
-           (capacity - list->length) * sizeof(TYPE));                          \
+           (list->length > capacity ? 0 : (capacity - list->length)) *         \
+               sizeof(TYPE));                                                  \
   }                                                                            \
                                                                                \
   void list_##TYPE##_push(list_##TYPE##_t *list, TYPE item) {                  \
