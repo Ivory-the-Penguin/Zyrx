@@ -3,7 +3,6 @@
 #include <stdio.h>
 
 DEFINE_ARRAY(int32_t, int)
-IMPL_ARRAY(int32_t, int)
 
 int main() {
   list_int_t *list = &(list_int_t){0};
@@ -19,7 +18,8 @@ int main() {
   list_int_view_chop_left(&view, 1);
   list_int_view_chop_right(&view, 5);
 
-  LIST_FOREACH(*list, i) { printf("%d ", *list_int_at(list, i)); }
+  LIST_FOREACH(view, i) { printf("%d ", *list_int_view_at(&view, i)); }
+  // LIST_FOREACH(*list, i) { printf("%d ", *list_int_at(list, i)); }
 
   printf("\nOffset: %lu, Length: %lu", view.offset, view.length);
 
