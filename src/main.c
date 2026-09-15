@@ -1,8 +1,12 @@
 #include "build.h"
+#include "core/list.h"
 #include <stdio.h>
 
+DEFINE_ARRAY(int)
+IMPL_ARRAY(int)
+
 int main() {
-  list_int_t list = {};
+  list_int_t list = {0};
 
   for (int i = 1; i <= 10; i++) {
     list_int_push(&list, i);

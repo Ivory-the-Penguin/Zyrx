@@ -1,5 +1,10 @@
+#ifndef ZYRX_LIST_H
+#define ZYRX_LIST_H
+
 #include <assert.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define DEFINE_ARRAY(TYPE)                                                     \
   typedef struct {                                                             \
@@ -26,7 +31,7 @@
     assert(capacity > 0 && "Can't set capacity to 0!");                        \
                                                                                \
     list->data = (TYPE *)realloc(list->data, capacity * sizeof(TYPE));         \
-    assert(list->data != nullptr && "Allocation failed!");                     \
+    assert(list->data != NULL && "Allocation failed!");                        \
                                                                                \
     list->capacity = capacity;                                                 \
                                                                                \
@@ -45,7 +50,7 @@
   }                                                                            \
                                                                                \
   void list_##TYPE##_free(list_##TYPE##_t *list) {                             \
-    assert(list->data != nullptr && "Data can't be null!");                    \
+    assert(list->data != NULL && "Data can't be null!");                       \
                                                                                \
     free((void *)list->data);                                                  \
     list->length = 0;                                                          \
@@ -55,12 +60,11 @@
   void list_##TYPE##_pop(list_##TYPE##_t *list) {                              \
     assert(list->length > 0 && "Popping when the list is empty !");            \
                                                                                \
-    list->data[--list->length] = (TYPE){};                                     \
+    list->data[--list->length] = (TYPE){0};                                    \
                                                                                \
     if (list->length < list->capacity / 4 && list->capacity > 8) {             \
       list_##TYPE##_set_capacity(list, list->capacity / 2);                    \
     }                                                                          \
   }
 
-DEFINE_ARRAY(int)
-DEFINE_ARRAY(float)
+#endif

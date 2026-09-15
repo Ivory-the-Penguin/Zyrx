@@ -5,10 +5,9 @@
       "request": "launch",
       "name": "Launch",
       "targetCreateCommands": [
-        "target create ${workspaceFolder}/builddir/zyrx"
+        "target create ${workspaceFolder}/build/zyrx"
       ],
-      "preLaunchTask": "Meson: Build all targets"
+      "preLaunchTask": "Build"
     }
-
   ]
 }
