@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define LIST_FOREACH(list, i) for (uint64_t i = 0; i < (list).length; i++)
+
 #define DEFINE_ARRAY(TYPE, TYPE_NAME)                                          \
   typedef struct {                                                             \
     TYPE *data;                                                                \
@@ -13,11 +15,46 @@
     uint64_t capacity;                                                         \
   } list_##TYPE_NAME##_t;                                                      \
                                                                                \
+  typedef struct {                                                             \
+    list_##TYPE_NAME##_t *ptr;                                                 \
+    uint64_t offset;                                                           \
+    uint64_t length;                                                           \
+  } list_##TYPE_NAME##_view_t;                                                 \
+                                                                               \
   void list_##TYPE_NAME##_set_capacity(list_##TYPE_NAME##_t *list,             \
                                        uint64_t capacity);                     \
   void list_##TYPE_NAME##_push(list_##TYPE_NAME##_t *list, TYPE item);         \
   void list_##TYPE_NAME##_free(list_##TYPE_NAME##_t *list);                    \
   void list_##TYPE_NAME##_pop(list_##TYPE_NAME##_t *list);                     \
+                                                                               \
+  static inline void list_##TYPE_NAME##_view_chop_left(                        \
+      list_##TYPE_NAME##_view_t *view, uint64_t amount) {                      \
+    assert(view->length >= amount);                                            \
+    view->offset += amount;                                                    \
+    view->length -= amount;                                                    \
+  }                                                                            \
+                                                                               \
+  static inline void list_##TYPE_NAME##_view_chop_right(                       \
+      list_##TYPE_NAME##_view_t *view, uint64_t amount) {                      \
+    assert(view->length >= amount);                                            \
+    view->length -= amount;                                                    \
+  }                                                                            \
+                                                                               \
+  static inline list_##TYPE_NAME##_view_t list_##TYPE_NAME##_view_make(        \
+      list_##TYPE_NAME##_t *list) {                                            \
+    assert(list->data != NULL && list->length > 0);                            \
+    return (list_##TYPE_NAME##_view_t){                                        \
+        .ptr = list,                                                           \
+        .offset = 0,                                                           \
+        .length = list->length,                                                \
+    };                                                                         \
+  }                                                                            \
+                                                                               \
+  static inline TYPE *list_##TYPE_NAME##_view_at(                              \
+      list_##TYPE_NAME##_view_t *view, uint64_t index) {                       \
+    assert(index < view->length);                                              \
+    return &view->ptr->data[view->offset + index];                             \
+  }                                                                            \
                                                                                \
   static inline TYPE *list_##TYPE_NAME##_at(list_##TYPE_NAME##_t *list,        \
                                             uint64_t index) {                  \
