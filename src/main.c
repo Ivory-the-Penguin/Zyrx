@@ -2,8 +2,8 @@
 #include "core/list.h"
 #include <stdio.h>
 
-DEFINE_ARRAY(int)
-IMPL_ARRAY(int)
+DEFINE_ARRAY(int32_t, int)
+IMPL_ARRAY(int32_t, int)
 
 int main() {
   list_int_t list = {0};
