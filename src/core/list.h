@@ -101,6 +101,22 @@
     }                                                                          \
   }                                                                            \
                                                                                \
+  static inline void list_##TYPE_NAME##_combine_view(                          \
+      list_##TYPE_NAME##_t *dest, const list_##TYPE_NAME##_view_t *src) {      \
+    ZYRX_ASSERT(dest->data != NULL && src->ptr->data != NULL &&                \
+                    src->ptr != NULL,                                          \
+                "Null data");                                                  \
+                                                                               \
+    if (src->length == 0) {                                                    \
+      return;                                                                  \
+    }                                                                          \
+                                                                               \
+    list_##TYPE_NAME##_set_capacity(dest, dest->length + src->length);         \
+    LIST_FOREACH(*src, i) {                                                    \
+      list_##TYPE_NAME##_push(dest, *list_##TYPE_NAME##_view_at(src, i));      \
+    }                                                                          \
+  }                                                                            \
+                                                                               \
   static inline void list_##TYPE_NAME##_view_chop_left(                        \
       list_##TYPE_NAME##_view_t *view, uint64_t amount) {                      \
     ZYRX_ASSERT(view->length >= amount, "String is too small to chop");        \
