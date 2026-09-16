@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-DEFINE_ARRAY(int32_t, int)
+DEFINE_LIST(int32_t, int)
 
 int main() {
   list_int_t *list = &(list_int_t){0};

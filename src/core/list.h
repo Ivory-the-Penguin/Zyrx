@@ -9,7 +9,7 @@
 
 #define LIST_FOREACH(list, i) for (uint64_t i = 0; i < (list).length; i++)
 
-#define DEFINE_ARRAY(TYPE, TYPE_NAME)                                          \
+#define DEFINE_LIST(TYPE, TYPE_NAME)                                           \
   typedef struct {                                                             \
     TYPE *data;                                                                \
     uint64_t length;                                                           \
@@ -67,6 +67,7 @@
     ZYRX_ASSERT(list->data != NULL, "Data can't be null");                     \
                                                                                \
     free((void *)list->data);                                                  \
+    list->data = NULL;                                                         \
     list->length = 0;                                                          \
     list->capacity = 0;                                                        \
   }                                                                            \
