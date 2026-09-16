@@ -9,6 +9,8 @@
 
 #define LIST_FOREACH(list, i) for (uint64_t i = 0; i < (list).length; i++)
 
+#define LIST_MINIMUM_CAPACITY 8
+
 #define DEFINE_LIST(TYPE, TYPE_NAME)                                           \
   typedef struct {                                                             \
     TYPE *data;                                                                \
@@ -76,7 +78,8 @@
                                                                                \
     list->data[--list->length] = (TYPE){0};                                    \
                                                                                \
-    if (list->length < list->capacity / 4 && list->capacity > 8) {             \
+    if (list->length < list->capacity / 4 &&                                   \
+        list->capacity > LIST_MINIMUM_CAPACITY) {                              \
       list_##TYPE_NAME##_set_capacity(list, list->capacity / 2);               \
     }                                                                          \
   }                                                                            \
@@ -118,6 +121,12 @@
         .offset = 0,                                                           \
         .length = list->length,                                                \
     };                                                                         \
+  }                                                                            \
+                                                                               \
+  static inline list_##TYPE_NAME##_t list_##TYPE_NAME##_make(void) {           \
+    list_##TYPE_NAME##_t list = (list_##TYPE_NAME##_t){0};                     \
+    list_##TYPE_NAME##_set_capacity(&list, LIST_MINIMUM_CAPACITY);             \
+    return list;                                                               \
   }
 
 #endif
