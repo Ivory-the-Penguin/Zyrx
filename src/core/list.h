@@ -47,12 +47,12 @@
       ZYRX_ASSERT(0, "Allocation failed");                                     \
     }                                                                          \
                                                                                \
-    list->capacity = capacity;                                                 \
-                                                                               \
     if (capacity > list->capacity) {                                           \
       memset(list->data + list->length, 0,                                     \
              (capacity - list->length) * sizeof(TYPE));                        \
     }                                                                          \
+                                                                               \
+    list->capacity = capacity;                                                 \
   }                                                                            \
                                                                                \
   static inline void list_##TYPE_NAME##_push(list_##TYPE_NAME##_t *list,       \
