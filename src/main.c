@@ -1,5 +1,6 @@
 #include "build.h"
 #include "core/list.h"
+#include <stdint.h>
 #include <stdio.h>
 
 DEFINE_ARRAY(int32_t, int)
