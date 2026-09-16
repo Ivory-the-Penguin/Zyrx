@@ -28,6 +28,10 @@ int main() {
   list_int_combine(&list, &list2);
   list_int_combine_view(&list, &view);
 
+  view = list_int_view_make(&list);
+
+  list_int_combine_view(&list, &view);
+
   // LIST_FOREACH(view, i) { printf("%d ", *list_int_view_at(&view, i)); }
   LIST_FOREACH(list, i) { printf("%d ", *list_int_at(&list, i)); }
 

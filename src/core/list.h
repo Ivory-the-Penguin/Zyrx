@@ -96,15 +96,15 @@
     }                                                                          \
                                                                                \
     list_##TYPE_NAME##_set_capacity(dest, dest->length + src->length);         \
-    LIST_FOREACH(*src, i) {                                                    \
-      list_##TYPE_NAME##_push(dest, *list_##TYPE_NAME##_at(src, i));           \
-    }                                                                          \
+                                                                               \
+    memcpy(dest->data + dest->length, src->data, src->length * sizeof(TYPE));  \
+    dest->length = dest->length + src->length;                                 \
   }                                                                            \
                                                                                \
   static inline void list_##TYPE_NAME##_combine_view(                          \
       list_##TYPE_NAME##_t *dest, const list_##TYPE_NAME##_view_t *src) {      \
-    ZYRX_ASSERT(dest->data != NULL && src->ptr->data != NULL &&                \
-                    src->ptr != NULL,                                          \
+    ZYRX_ASSERT(dest->data != NULL && src->ptr != NULL &&                      \
+                    src->ptr->data != NULL,                                    \
                 "Null data");                                                  \
                                                                                \
     if (src->length == 0) {                                                    \
@@ -112,9 +112,10 @@
     }                                                                          \
                                                                                \
     list_##TYPE_NAME##_set_capacity(dest, dest->length + src->length);         \
-    LIST_FOREACH(*src, i) {                                                    \
-      list_##TYPE_NAME##_push(dest, *list_##TYPE_NAME##_view_at(src, i));      \
-    }                                                                          \
+                                                                               \
+    memcpy(dest->data + dest->length, list_##TYPE_NAME##_view_at(src, 0),      \
+           src->length * sizeof(TYPE));                                        \
+    dest->length = dest->length + src->length;                                 \
   }                                                                            \
                                                                                \
   static inline void list_##TYPE_NAME##_view_chop_left(                        \
