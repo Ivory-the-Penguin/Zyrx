@@ -56,7 +56,7 @@
   static inline void list_##TYPE_NAME##_push(list_##TYPE_NAME##_t *list,       \
                                              TYPE item) {                      \
     if (list->capacity == 0) {                                                 \
-      list_##TYPE_NAME##_set_capacity(list, 4);                                \
+      list_##TYPE_NAME##_set_capacity(list, LIST_MINIMUM_CAPACITY);            \
     } else if (list->length == list->capacity) {                               \
       list_##TYPE_NAME##_set_capacity(list, list->capacity * 2);               \
     }                                                                          \
