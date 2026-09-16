@@ -49,8 +49,10 @@
                                                                                \
     list->capacity = capacity;                                                 \
                                                                                \
-    memset(list->data + list->length, 0,                                       \
-           (capacity - list->length) * sizeof(TYPE));                          \
+    if (capacity > list->capacity) {                                           \
+      memset(list->data + list->length, 0,                                     \
+             (capacity - list->length) * sizeof(TYPE));                        \
+    }                                                                          \
   }                                                                            \
                                                                                \
   static inline void list_##TYPE_NAME##_push(list_##TYPE_NAME##_t *list,       \
