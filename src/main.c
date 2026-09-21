@@ -36,4 +36,5 @@ int main() {
   LIST_FOREACH(list, i) { printf("%d ", *list_int_at(&list, i)); }
 
   list_int_free(&list);
+  list_int_free(&list2);
 }

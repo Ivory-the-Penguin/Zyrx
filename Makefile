@@ -1,5 +1,5 @@
 CC = clang
-CFLAGS = -std=c99 -g -Isrc -Wall -Wno-unused-function -Werror 
+CFLAGS = -std=c99 -g -Isrc -Wall -Wno-unused-function -Werror
 
 zyrx: src/main.c compile_flags.txt
 	@mkdir -p build
