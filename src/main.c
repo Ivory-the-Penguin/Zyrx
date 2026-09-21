@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -5,37 +6,17 @@
 #include "build.h"
 #include "core/list.h"
 
-DEFINE_LIST(int32_t, int)
+#define HASHMAP_SMALL_PRIME 53ull
 
-int main() {
-  list_int_t list = list_int_make();
-  list_int_t list2 = list_int_make();
+static inline uint64_t hashmap_make_hash(const char* string, uint64_t size) {
+  uint64_t hash_value = 0, small_prime_pow = 1;
 
-  for (int i = 1; i <= 10; i++) {
-    list_int_push(&list, i);
+  for (uint64_t i = 0; i < size; i++) {
+    hash_value = hash_value + string[i] * small_prime_pow;
+    small_prime_pow = HASHMAP_SMALL_PRIME * small_prime_pow;
   }
 
-  for (int i = -100; i < 0; i += 10) {
-    list_int_push(&list2, i);
-  }
-
-  list_int_pop(&list);
-
-  list_int_view_t view = list_int_view_make(&list);
-
-  list_int_view_chop_left(&view, 1);
-  list_int_view_chop_right(&view, 5);
-
-  list_int_combine(&list, &list2);
-  list_int_combine_view(&list, &view);
-
-  view = list_int_view_make(&list);
-
-  list_int_combine_view(&list, &view);
-
-  // LIST_FOREACH(view, i) { printf("%d ", *list_int_view_at(&view, i)); }
-  LIST_FOREACH(list, i) { printf("%d ", *list_int_at(&list, i)); }
-
-  list_int_free(&list);
-  list_int_free(&list2);
+  return hash_value;
 }
+
+int main() {}
