@@ -14,4 +14,4 @@ run: zyrx
 	@./build/zyrx
 
 clean:
-	@rm -rf build
+	rm -rf build

@@ -1,8 +1,9 @@
-#include "build.h"
-#include "core/list.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+
+#include "build.h"
+#include "core/list.h"
 
 DEFINE_LIST(int32_t, int)
 
