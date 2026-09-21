@@ -19,4 +19,14 @@ static inline uint64_t hashmap_make_hash(const char* string, uint64_t size) {
   return hash_value;
 }
 
+typedef struct {
+  const char* key;
+  int value;
+} hashmap_int_slot_t;
+
+typedef struct {
+  hashmap_int_slot_t* slots;
+  uint64_t capacity;
+} hasmap_int_t;
+
 int main() {}
