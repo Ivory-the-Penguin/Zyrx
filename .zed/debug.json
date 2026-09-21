@@ -1,0 +1,9 @@
+[
+  {
+    "adapter": "CodeLLDB",
+    "label": "Launch",
+    "program": "./build/zyrx",
+    "build": "Build",
+    "request": "launch"
+  }
+]
