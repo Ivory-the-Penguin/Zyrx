@@ -9,7 +9,7 @@
 #include "core/list.h"
 
 #define HASHMAP_SMALL_PRIME 53ull
-#define HASHMAP_MINIMUM_CAPACITY 16
+#define HASHMAP_MINIMUM_CAPACITY 5
 
 static inline uint64_t hashmap_make_hash(const char* string) {
   uint64_t hash_value = 0, small_prime_pow = 1;
@@ -45,6 +45,9 @@ static inline void hashmap_int_set(hashmap_int_t* hashmap, const char* key,
                                    int value) {
   uint64_t hash = hashmap_make_hash(key), position = hash % hashmap->capacity;
 
+  ZYRX_ASSERT(hashmap->slots[position].hash != hash,
+              "Can't have same strings as the key");
+
   if (hashmap->slots[position].key == NULL) {
     hashmap->slots[position] = (hashmap_int_slot_t){
         .key = key,
@@ -53,11 +56,31 @@ static inline void hashmap_int_set(hashmap_int_t* hashmap, const char* key,
     };
     return;
   } else {
-    ZYRX_ASSERT(0, "Hashmap collision!");
+    for (uint64_t i = (position + 1) % hashmap->capacity; i != position;
+         i = (i + 1 >= hashmap->capacity ? 0 : i + 1)) {
+      ZYRX_ASSERT(hashmap->slots[i].hash != hash,
+                  "Can't have same strings as the key");
+
+      if (hashmap->slots[i].key == NULL) {
+        hashmap->slots[i] = (hashmap_int_slot_t){
+            .key = key,
+            .value = value,
+            .hash = hash,
+        };
+        return;
+      }
+    }
+
+    ZYRX_ASSERT(0, "Hashmap is out of space");
   }
 }
 
 int main() {
   hashmap_int_t hm = hashmap_int_make();
   hashmap_int_set(&hm, "SomeKey", 25);
+  hashmap_int_set(&hm, "Another key", 124);
+  hashmap_int_set(&hm, "uknown value?", -1);
+  hashmap_int_set(&hm, "uknown value1?", -1);
+  hashmap_int_set(&hm, "uknown value3?", -1);
+  hashmap_int_set(&hm, "Overflow", -1);
 }
