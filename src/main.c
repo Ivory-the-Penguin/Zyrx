@@ -10,7 +10,7 @@
 
 #define HASHMAP_OFFSET_BASIS 14695981039346656037ull
 #define HASHMAP_PRIME 1099511628211ull
-#define HASHMAP_MINIMUM_CAPACITY 5
+#define HASHMAP_MINIMUM_CAPACITY 16
 
 static inline uint64_t hashmap_make_hash(const char* string) {
   uint64_t hash = HASHMAP_OFFSET_BASIS;
