@@ -11,7 +11,9 @@
 
 #define HASHMAP_OFFSET_BASIS 14695981039346656037ull
 #define HASHMAP_PRIME 1099511628211ull
-#define HASHMAP_MINIMUM_CAPACITY 16
+#define HASHMAP_MINIMUM_CAPACITY 5
+
+static char* hashmap_tombstone = "tombstone";
 
 static inline uint64_t hashmap_make_hash(const char* string) {
   uint64_t hash = HASHMAP_OFFSET_BASIS;
@@ -52,7 +54,8 @@ static inline void hashmap_int_set_raw(hashmap_int_t* hashmap, const char* key,
 
   uint64_t i = position;
   do {
-    if (hashmap->slots[i].key == NULL) {
+    if (hashmap->slots[i].key == NULL ||
+        hashmap->slots[i].key == hashmap_tombstone) {
       hashmap->slots[i] = (hashmap_slot_int_t){
           .key = key,
           .value = value,
@@ -78,22 +81,36 @@ static inline void hashmap_int_set(hashmap_int_t* hashmap, const char* key,
   hashmap_int_set_raw(hashmap, key, value, hash);
 }
 
-static inline int hashmap_int_get(hashmap_int_t* hashmap, const char* key) {
-  uint64_t hash = hashmap_make_hash(key), position = hash % hashmap->capacity;
+static inline hashmap_slot_int_t* hashmap_int_get_raw(hashmap_int_t* hashmap,
+                                                      uint64_t hash) {
+  uint64_t position = hash % hashmap->capacity;
 
-  if (hashmap->slots[position].key != NULL &&
-      hashmap->slots[position].hash == hash) {
-    return hashmap->slots[position].value;
-  } else {
-    for (uint64_t i = (position + 1) % hashmap->capacity; i != position;
-         i = (i + 1 >= hashmap->capacity ? 0 : i + 1)) {
-      if (hashmap->slots[i].key != NULL && hashmap->slots[i].hash == hash) {
-        return hashmap->slots[i].value;
-      }
+  uint64_t i = position;
+  do {
+    if (hashmap->slots[i].key == NULL) {
+      break;
     }
 
-    ZYRX_ASSERT(0, "Value is not found in the hashmap");
-  }
+    if (hashmap->slots[i].key == hashmap_tombstone) {
+      continue;
+    }
+
+    if (hashmap->slots[i].hash == hash) {
+      return &hashmap->slots[i];
+    }
+
+    i = (i + 1 >= hashmap->capacity ? 0 : i + 1);
+  } while (i != position);
+
+  ZYRX_ASSERT(0, "Value is not found in the hashmap");
+
+  return (hashmap_slot_int_t*)NULL;
+}
+
+static inline int hashmap_int_get(hashmap_int_t* hashmap, const char* key) {
+  uint64_t hash = hashmap_make_hash(key);
+
+  return hashmap_int_get_raw(hashmap, hash)->value;
 }
 
 static inline void hashmap_int_resize(hashmap_int_t* hashmap, uint64_t size) {
@@ -117,11 +134,24 @@ static inline void hashmap_int_resize(hashmap_int_t* hashmap, uint64_t size) {
   free(old_array);
 }
 
+static inline void hashmap_int_remove(hashmap_int_t* hashmap, const char* key) {
+  uint64_t hash = hashmap_make_hash(key);
+
+  *hashmap_int_get_raw(hashmap, hash) = (hashmap_slot_int_t){
+      .key = hashmap_tombstone,
+      .value = 0,
+      .hash = 0,
+  };
+  hashmap->items_count--;
+}
+
 int main() {
   hashmap_int_t hm = hashmap_int_make();
   hashmap_int_set(&hm, "SomeKey", 25);
   hashmap_int_set(&hm, "Another key", 124);
-  hashmap_int_set(&hm, "uknown value?", -1);
+  hashmap_int_set(&hm, "unknown value?", -1);
 
-  printf("%d", hashmap_int_get(&hm, "Another key"));
+  hashmap_int_remove(&hm, "unknown value?");
+
+  printf("%d", hashmap_int_get(&hm, "SomeKey"));
 }
