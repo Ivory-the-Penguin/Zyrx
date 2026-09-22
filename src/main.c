@@ -8,19 +8,21 @@
 #include "core/assert.h"
 #include "core/list.h"
 
-#define HASHMAP_SMALL_PRIME 53ull
+#define HASHMAP_OFFSET_BASIS 14695981039346656037ull
+#define HASHMAP_PRIME 1099511628211ull
 #define HASHMAP_MINIMUM_CAPACITY 5
 
 static inline uint64_t hashmap_make_hash(const char* string) {
-  uint64_t hash_value = 0, small_prime_pow = 1;
-  uint64_t size = strlen(string);
+  uint64_t hash = HASHMAP_OFFSET_BASIS;
+  uint8_t* i = (uint8_t*)string;
 
-  for (uint64_t i = 0; i < size; i++) {
-    hash_value = hash_value + string[i] * small_prime_pow;
-    small_prime_pow = HASHMAP_SMALL_PRIME * small_prime_pow;
+  while (*i != '\0') {
+    hash = hash ^ *i;
+    hash = hash * HASHMAP_PRIME;
+    i++;
   }
 
-  return hash_value;
+  return hash;
 }
 
 typedef struct {
@@ -75,12 +77,29 @@ static inline void hashmap_int_set(hashmap_int_t* hashmap, const char* key,
   }
 }
 
+static inline int hashmap_int_get(hashmap_int_t* hashmap, const char* key) {
+  uint64_t hash = hashmap_make_hash(key), position = hash % hashmap->capacity;
+
+  if (hashmap->slots[position].key != NULL &&
+      hashmap->slots[position].hash == hash) {
+    return hashmap->slots[position].value;
+  } else {
+    for (uint64_t i = (position + 1) % hashmap->capacity; i != position;
+         i = (i + 1 >= hashmap->capacity ? 0 : i + 1)) {
+      if (hashmap->slots[i].key != NULL && hashmap->slots[i].hash == hash) {
+        return hashmap->slots[i].value;
+      }
+    }
+
+    ZYRX_ASSERT(0, "Value is not found in the hashmap");
+  }
+}
+
 int main() {
   hashmap_int_t hm = hashmap_int_make();
   hashmap_int_set(&hm, "SomeKey", 25);
   hashmap_int_set(&hm, "Another key", 124);
   hashmap_int_set(&hm, "uknown value?", -1);
-  hashmap_int_set(&hm, "uknown value1?", -1);
-  hashmap_int_set(&hm, "uknown value3?", -1);
-  hashmap_int_set(&hm, "Overflow", -1);
+
+  printf("%d", hashmap_int_get(&hm, "Another key"));
 }
