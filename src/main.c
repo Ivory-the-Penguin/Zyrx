@@ -11,7 +11,7 @@
 
 #define HASHMAP_OFFSET_BASIS 14695981039346656037ull
 #define HASHMAP_PRIME 1099511628211ull
-#define HASHMAP_MINIMUM_CAPACITY 5
+#define HASHMAP_MINIMUM_CAPACITY 16
 #define HASHMAP_SIZE_INCREASE_THRESHOLD 0.7f
 #define HASHMAP_SIZE_DECREASE_THRESHOLD 0.15f
 
@@ -146,17 +146,30 @@ static inline hashmap_slot_int_t* hashmap_int_get_raw(hashmap_int_t* hashmap,
     i = (i + 1 >= hashmap->capacity ? 0 : i + 1);
   } while (i != position);
 
-  ZYRX_ASSERT(0, "Value is not found in the hashmap");
-
   return (hashmap_slot_int_t*)NULL;
 }
 
 static inline int hashmap_int_get(hashmap_int_t* hashmap, const char* key) {
-  return hashmap_int_get_raw(hashmap, hashmap_make_hash(key))->value;
+  hashmap_slot_int_t* found_slot =
+      hashmap_int_get_raw(hashmap, hashmap_make_hash(key));
+
+  if (found_slot == NULL) {
+    ZYRX_ASSERT(0, "Value is not found in the hashmap");
+  } else {
+    return found_slot->value;
+  }
 }
 
 static inline void hashmap_int_remove(hashmap_int_t* hashmap, const char* key) {
-  *hashmap_int_get_raw(hashmap, hashmap_make_hash(key)) = (hashmap_slot_int_t){
+  hashmap_slot_int_t* found_slot =
+      hashmap_int_get_raw(hashmap, hashmap_make_hash(key));
+
+  if (found_slot == NULL) {
+    ZYRX_ASSERT(0, "Value is not found in the hashmap");
+    return;
+  }
+
+  *found_slot = (hashmap_slot_int_t){
       .key = hashmap_tombstone,
       .value = 0,
       .hash = 0,
@@ -168,6 +181,11 @@ static inline void hashmap_int_remove(hashmap_int_t* hashmap, const char* key) {
       hashmap->capacity / 2 >= HASHMAP_MINIMUM_CAPACITY) {
     hashmap_int_resize(hashmap, hashmap->capacity / 2);
   }
+}
+
+static inline bool hashmap_int_exists(hashmap_int_t* hashmap, const char* key) {
+  return (hashmap_int_get_raw(hashmap, hashmap_make_hash(key)) == NULL ? false
+                                                                       : true);
 }
 
 int main() {
