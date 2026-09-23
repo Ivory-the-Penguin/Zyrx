@@ -95,9 +95,37 @@ static inline void hashmap_int_set_raw(hashmap_int_t* hashmap, const char* key,
   ZYRX_ASSERT(0, "Hashmap is out of space");
 }
 
+static inline void hashmap_int_resize(hashmap_int_t* hashmap, uint64_t size) {
+  ZYRX_ASSERT(size >= hashmap->items_count, "Capacity is too small!");
+
+  hashmap_slot_int_t* old_array = hashmap->slots;
+  uint64_t old_capacity = hashmap->capacity;
+
+  hashmap->slots =
+      (hashmap_slot_int_t*)calloc(size, sizeof(hashmap_slot_int_t));
+  hashmap->capacity = size;
+  hashmap->items_count = 0;
+
+  for (uint64_t i = 0; i < old_capacity; i++) {
+    if (old_array[i].key != NULL && old_array[i].key != hashmap_tombstone) {
+      hashmap_int_set_raw(hashmap, old_array[i].key, old_array[i].value,
+                          old_array[i].hash);
+    }
+  }
+
+  free(old_array);
+}
+
+#define HASHMAP_SIZE_INCREASE_THRESHOLD 0.7f
+
 static inline void hashmap_int_set(hashmap_int_t* hashmap, const char* key,
                                    int value) {
   hashmap_int_set_raw(hashmap, key, value, hashmap_make_hash(key));
+
+  if (((float)hashmap->items_count / hashmap->capacity) >
+      HASHMAP_SIZE_INCREASE_THRESHOLD) {
+    hashmap_int_resize(hashmap, hashmap->capacity * 2);
+  }
 }
 
 static inline hashmap_slot_int_t* hashmap_int_get_raw(hashmap_int_t* hashmap,
@@ -127,27 +155,6 @@ static inline int hashmap_int_get(hashmap_int_t* hashmap, const char* key) {
   return hashmap_int_get_raw(hashmap, hashmap_make_hash(key))->value;
 }
 
-static inline void hashmap_int_resize(hashmap_int_t* hashmap, uint64_t size) {
-  ZYRX_ASSERT(size >= hashmap->items_count, "Capacity is too small!");
-
-  hashmap_slot_int_t* old_array = hashmap->slots;
-  uint64_t old_capacity = hashmap->capacity;
-
-  hashmap->slots =
-      (hashmap_slot_int_t*)calloc(size, sizeof(hashmap_slot_int_t));
-  hashmap->capacity = size;
-  hashmap->items_count = 0;
-
-  for (uint64_t i = 0; i < old_capacity; i++) {
-    if (old_array[i].key != NULL && old_array[i].key != hashmap_tombstone) {
-      hashmap_int_set_raw(hashmap, old_array[i].key, old_array[i].value,
-                          old_array[i].hash);
-    }
-  }
-
-  free(old_array);
-}
-
 static inline void hashmap_int_remove(hashmap_int_t* hashmap, const char* key) {
   *hashmap_int_get_raw(hashmap, hashmap_make_hash(key)) = (hashmap_slot_int_t){
       .key = hashmap_tombstone,
@@ -162,6 +169,7 @@ int main() {
   hashmap_int_set(&hm, "SomeKey", 25);
   hashmap_int_set(&hm, "Another key", 124);
   hashmap_int_set(&hm, "uknown value?", -1);
+  hashmap_int_set(&hm, "Might resize", -1);
 
   hashmap_int_remove(&hm, "Another key");
 
