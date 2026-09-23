@@ -52,24 +52,45 @@ static inline void hashmap_int_set_raw(hashmap_int_t* hashmap, const char* key,
                                        int value, uint64_t hash) {
   uint64_t position = hash % hashmap->capacity;
 
-  uint64_t i = position;
-  do {
-    if (hashmap->slots[i].key == NULL ||
-        hashmap->slots[i].key == hashmap_tombstone) {
-      hashmap->slots[i] = (hashmap_slot_int_t){
-          .key = key,
-          .value = value,
-          .hash = hash,
-      };
-      hashmap->items_count++;
-      return;
+  uint64_t i = position, first_tombstone = 0;
+  bool found_tombstone = false;
+  while (hashmap->slots[i].key != NULL) {
+    if (hashmap->slots[i].key == hashmap_tombstone) {
+      if (!found_tombstone) {
+        first_tombstone = i;
+        found_tombstone = true;
+      }
     } else if (hashmap->slots[i].hash == hash) {
       hashmap->slots[i].value = value;
       return;
     }
 
     i = (i + 1 >= hashmap->capacity ? 0 : i + 1);
-  } while (i != position);
+
+    if (i == position) {
+      break;
+    }
+  }
+
+  if (found_tombstone) {
+    hashmap->slots[first_tombstone] = (hashmap_slot_int_t){
+        .key = key,
+        .value = value,
+        .hash = hash,
+    };
+    hashmap->items_count++;
+    return;
+  }
+
+  if (hashmap->slots[i].key == NULL) {
+    hashmap->slots[i] = (hashmap_slot_int_t){
+        .key = key,
+        .value = value,
+        .hash = hash,
+    };
+    hashmap->items_count++;
+    return;
+  }
 
   ZYRX_ASSERT(0, "Hashmap is out of space");
 }
