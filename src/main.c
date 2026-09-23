@@ -91,11 +91,8 @@ static inline hashmap_slot_int_t* hashmap_int_get_raw(hashmap_int_t* hashmap,
       break;
     }
 
-    if (hashmap->slots[i].key == hashmap_tombstone) {
-      continue;
-    }
-
-    if (hashmap->slots[i].hash == hash) {
+    if (hashmap->slots[i].hash == hash &&
+        hashmap->slots[i].key != hashmap_tombstone) {
       return &hashmap->slots[i];
     }
 
@@ -125,7 +122,7 @@ static inline void hashmap_int_resize(hashmap_int_t* hashmap, uint64_t size) {
   hashmap->items_count = 0;
 
   for (uint64_t i = 0; i < old_capacity; i++) {
-    if (old_array[i].key != NULL) {
+    if (old_array[i].key != NULL && old_array[i].key != hashmap_tombstone) {
       hashmap_int_set_raw(hashmap, old_array[i].key, old_array[i].value,
                           old_array[i].hash);
     }
@@ -149,9 +146,9 @@ int main() {
   hashmap_int_t hm = hashmap_int_make();
   hashmap_int_set(&hm, "SomeKey", 25);
   hashmap_int_set(&hm, "Another key", 124);
-  hashmap_int_set(&hm, "unknown value?", -1);
+  hashmap_int_set(&hm, "uknown value?", -1);
 
-  hashmap_int_remove(&hm, "unknown value?");
+  hashmap_int_remove(&hm, "Another key");
 
   printf("%d", hashmap_int_get(&hm, "SomeKey"));
 }
