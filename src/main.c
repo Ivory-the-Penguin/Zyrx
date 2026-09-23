@@ -97,9 +97,7 @@ static inline void hashmap_int_set_raw(hashmap_int_t* hashmap, const char* key,
 
 static inline void hashmap_int_set(hashmap_int_t* hashmap, const char* key,
                                    int value) {
-  uint64_t hash = hashmap_make_hash(key);
-
-  hashmap_int_set_raw(hashmap, key, value, hash);
+  hashmap_int_set_raw(hashmap, key, value, hashmap_make_hash(key));
 }
 
 static inline hashmap_slot_int_t* hashmap_int_get_raw(hashmap_int_t* hashmap,
@@ -126,9 +124,7 @@ static inline hashmap_slot_int_t* hashmap_int_get_raw(hashmap_int_t* hashmap,
 }
 
 static inline int hashmap_int_get(hashmap_int_t* hashmap, const char* key) {
-  uint64_t hash = hashmap_make_hash(key);
-
-  return hashmap_int_get_raw(hashmap, hash)->value;
+  return hashmap_int_get_raw(hashmap, hashmap_make_hash(key))->value;
 }
 
 static inline void hashmap_int_resize(hashmap_int_t* hashmap, uint64_t size) {
@@ -153,9 +149,7 @@ static inline void hashmap_int_resize(hashmap_int_t* hashmap, uint64_t size) {
 }
 
 static inline void hashmap_int_remove(hashmap_int_t* hashmap, const char* key) {
-  uint64_t hash = hashmap_make_hash(key);
-
-  *hashmap_int_get_raw(hashmap, hash) = (hashmap_slot_int_t){
+  *hashmap_int_get_raw(hashmap, hashmap_make_hash(key)) = (hashmap_slot_int_t){
       .key = hashmap_tombstone,
       .value = 0,
       .hash = 0,
