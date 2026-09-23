@@ -12,6 +12,8 @@
 #define HASHMAP_OFFSET_BASIS 14695981039346656037ull
 #define HASHMAP_PRIME 1099511628211ull
 #define HASHMAP_MINIMUM_CAPACITY 5
+#define HASHMAP_SIZE_INCREASE_THRESHOLD 0.7f
+#define HASHMAP_SIZE_DECREASE_THRESHOLD 0.15f
 
 static char* hashmap_tombstone = "tombstone";
 
@@ -116,8 +118,6 @@ static inline void hashmap_int_resize(hashmap_int_t* hashmap, uint64_t size) {
   free(old_array);
 }
 
-#define HASHMAP_SIZE_INCREASE_THRESHOLD 0.7f
-
 static inline void hashmap_int_set(hashmap_int_t* hashmap, const char* key,
                                    int value) {
   hashmap_int_set_raw(hashmap, key, value, hashmap_make_hash(key));
@@ -162,6 +162,12 @@ static inline void hashmap_int_remove(hashmap_int_t* hashmap, const char* key) {
       .hash = 0,
   };
   hashmap->items_count--;
+
+  if (((float)hashmap->items_count / hashmap->capacity) <
+          HASHMAP_SIZE_DECREASE_THRESHOLD &&
+      hashmap->capacity / 2 >= HASHMAP_MINIMUM_CAPACITY) {
+    hashmap_int_resize(hashmap, hashmap->capacity / 2);
+  }
 }
 
 int main() {
