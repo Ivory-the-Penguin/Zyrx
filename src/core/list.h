@@ -77,7 +77,7 @@
   static inline void list_##TYPE_NAME##_pop(list_##TYPE_NAME##_t* list) {     \
     ZYRX_ASSERT(list->length > 0, "Popping when the list is empty ");         \
                                                                               \
-    list->data[--list->length] = (TYPE){0};                                   \
+    memset(list->data + (--list->length), 0, sizeof(TYPE));                   \
                                                                               \
     if (list->length < list->capacity / 4 &&                                  \
         list->capacity > LIST_MINIMUM_CAPACITY) {                             \
