@@ -1,17 +1,36 @@
 CC = clang
-CFLAGS = -std=c99 -g -Isrc -Wall -Wno-unused-function -Werror
+CFLAGS = -std=gnu11 -g -Wall -Wno-unused-function -Werror \
+      	-Isrc \
+      	-Ivendor \
+      	-MMD -MP
 
-zyrx: src/main.c compile_flags.txt
-	@mkdir -p build
-	$(CC) $(CFLAGS) src/main.c -o build/zyrx
+LDFLAGS = -lm 
+NAME = zyrx
+BUILD_DIR = build
+
+SRCS = $(shell find src -name "*.c") $(shell find vendor -name "*.c")
+
+OBJS = $(patsubst %.c, $(BUILD_DIR)/%.o, $(SRCS))
+DEPS = $(OBJS:.o=.d)
+
+$(NAME): $(OBJS) compile_flags.txt
+	$(CC) $(OBJS) $(LDFLAGS) -o $(NAME)
+
+$(OBJS): $(BUILD_DIR)/%.o: %.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+-include $(DEPS)
 
 compile_flags.txt: Makefile
 	@echo "Generating compile_flags.txt..."
 	@echo "$(CFLAGS)" | tr ' ' '\n' > compile_flags.txt
 
-run: zyrx
+run: $(NAME)
 	@echo
-	@./build/zyrx
+	@./$(NAME)
 
 clean:
-	rm -rf build
+	rm -rf $(BUILD_DIR) $(NAME) $(SHADER_OUT_DIR) compile_flags.txt
+
+.PHONY: run clean

@@ -2,23 +2,18 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-#include "build.h"
-#include "core/hashmap.h"
-#include "core/list.h"
-
-DEFINE_HASHMAP(int32_t, int)
+#include "vec/vec.h"
 
 int main() {
-  hashmap_int_t hm = hashmap_int_make();
-  hashmap_int_set(&hm, "SomeKey", 25);
-  hashmap_int_set(&hm, "Another key", 124);
-  hashmap_int_set(&hm, "uknown value?", -1);
-  hashmap_int_set(&hm, "Might resize", -1);
+  vec_int_t test;
+  vec_init(&test);
 
-  hashmap_int_remove(&hm, "Another key");
+  vec_push(&test, 100);
+  vec_push(&test, 300);
+  vec_push(&test, 600);
 
-  printf("%d", hashmap_int_get(&hm, "SomeKey"));
+  printf("%d\n", test.data[0]);
+
+  vec_deinit(&test);
 }

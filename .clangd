@@ -1,5 +1,0 @@
-CompileFlags:
-  Compiler: clang
-Diagnostics:
-  UnusedIncludes: None
-  MissingIncludes: Strict
