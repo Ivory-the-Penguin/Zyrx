@@ -67,6 +67,86 @@ static inline void sv_trim(string_view_t* sv) {
   sv_trim_right(sv);
 }
 
+static inline string_view_t sv_chop_by_delimiter(string_view_t* sv,
+                                                 char delimiter) {
+  while (sv->data[0] == delimiter) {
+    sv_chop_left(sv, 1);
+  }
+
+  uint64_t end = 0;
+  while (end <= sv->length && sv->data[end] != delimiter) {
+    end++;
+  }
+
+  string_view_t out;
+  if (end < sv->length) {
+    out = (string_view_t){
+        .data = sv->data,
+        .length = end,
+    };
+    sv_chop_left(sv, end + 1);
+    return out;
+  }
+
+  out = *sv;
+  sv_chop_left(sv, sv->length);
+  return out;
+}
+
+// is_type is what IS a delimiter
+static inline string_view_t sv_chop_by_type(string_view_t* sv,
+                                            int (*is_type)(int c)) {
+  while (sv->length > 0 && is_type(sv->data[0])) {
+    sv_chop_left(sv, 1);
+  }
+
+  uint64_t end = 0;
+  while (end <= sv->length && !is_type(sv->data[end])) {
+    end++;
+  }
+
+  string_view_t out;
+  if (end < sv->length) {
+    out = (string_view_t){
+        .data = sv->data,
+        .length = end,
+    };
+    sv_chop_left(sv, end + 1);
+    return out;
+  }
+
+  out = *sv;
+  sv_chop_left(sv, sv->length);
+  return out;
+}
+
+// is_type is what ISN'T a delimiter
+static inline string_view_t sv_chop_by_type_rev(string_view_t* sv,
+                                                int (*is_type)(int c)) {
+  while (sv->length > 0 && !is_type(sv->data[0])) {
+    sv_chop_left(sv, 1);
+  }
+
+  uint64_t end = 0;
+  while (end <= sv->length && is_type(sv->data[end])) {
+    end++;
+  }
+
+  string_view_t out;
+  if (end < sv->length) {
+    out = (string_view_t){
+        .data = sv->data,
+        .length = end,
+    };
+    sv_chop_left(sv, end + 1);
+    return out;
+  }
+
+  out = *sv;
+  sv_chop_left(sv, sv->length);
+  return out;
+}
+
 // Returning string must be freed!
 char* get_file_string(const char* path) {
   FILE* file = fopen(path, "rb");
@@ -90,10 +170,13 @@ int main() {
   string_view_t file_view = SV(file_string);
   (void)file_view;
 
-  string_view_t sv = SV("       HELLO   WORLD      ");
-  sv_trim(&sv);
+  string_view_t sv = SV(",,,this, is, a, list, of, items");
 
-  printf("|" SV_FMT "|\n", (int)sv.length, sv.data);
+  string_view_t type = sv_chop_by_type_rev(&sv, isalpha);
+  printf("|" SV_FMT "|\n", (int)type.length, type.data);
+
+  type = sv_chop_by_type_rev(&sv, isalpha);
+  printf("|" SV_FMT "|\n", (int)type.length, type.data);
 
   free(file_string);
 }
