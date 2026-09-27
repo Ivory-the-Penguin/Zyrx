@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "assert.h"
 #include "vec/vec.h"
@@ -47,10 +48,7 @@ static inline void sv_chop_right(string_view_t* sv, uint64_t n) {
 // Returning string must be freed!
 char* get_file_string(const char* path) {
   FILE* file = fopen(path, "r");
-  if (file == NULL) {
-    fprintf(stderr, "Couldn't open file!");
-    abort();
-  }
+  ZYRX_ASSERT(file != NULL, "Couldn't open file");
 
   fseek(file, 0, SEEK_END);
   uint64_t file_size = ftell(file);
