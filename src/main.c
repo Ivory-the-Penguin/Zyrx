@@ -51,13 +51,13 @@ static inline void sv_chop_right(string_view_t* sv, uint64_t n) {
 }
 
 static inline void sv_trim_left(string_view_t* sv) {
-  while (isspace(sv->data[0])) {
+  while (sv->length > 0 && isspace(sv->data[0])) {
     sv_chop_left(sv, 1);
   }
 }
 
 static inline void sv_trim_right(string_view_t* sv) {
-  while (isspace(sv->data[sv->length - 1])) {
+  while (sv->length > 0 && isspace(sv->data[sv->length - 1])) {
     sv_chop_right(sv, 1);
   }
 }
