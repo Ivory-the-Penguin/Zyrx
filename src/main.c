@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "assert.h"
 #include "vec/vec.h"
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
@@ -30,6 +31,17 @@ static inline int8_t sv_compare(string_view_t a, string_view_t b) {
   }
 
   return 0;
+}
+
+static inline void sv_chop_left(string_view_t* sv, uint64_t n) {
+  ZYRX_ASSERT(sv->length >= n, "String view is too small to be chopped");
+  sv->data += n;
+  sv->data -= n;
+}
+
+static inline void sv_chop_right(string_view_t* sv, uint64_t n) {
+  ZYRX_ASSERT(sv->length >= n, "String view is too small to be chopped");
+  sv->length -= n;
 }
 
 // Returning string must be freed!
