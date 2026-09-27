@@ -170,13 +170,11 @@ int main() {
   string_view_t file_view = SV(file_string);
   (void)file_view;
 
-  string_view_t sv = SV(",,,this, is, a, list, of, items");
-
-  string_view_t type = sv_chop_by_type_rev(&sv, isalpha);
-  printf("|" SV_FMT "|\n", (int)type.length, type.data);
-
-  type = sv_chop_by_type_rev(&sv, isalpha);
-  printf("|" SV_FMT "|\n", (int)type.length, type.data);
+  while (file_view.length > 0) {
+    string_view_t type = sv_chop_by_delimiter(&file_view, '\n');
+    sv_trim(&type);
+    printf("|" SV_FMT "|\n", (int)type.length, type.data);
+  }
 
   free(file_string);
 }
