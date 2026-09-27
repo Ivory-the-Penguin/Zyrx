@@ -1,7 +1,9 @@
+#include <ctype.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "assert.h"
@@ -17,6 +19,8 @@ typedef struct {
 
 #define SV(c_str) \
   (string_view_t) { .data = c_str, .length = strlen(c_str), }
+
+#define SV_FMT "%.*s"
 
 /*
 -1 means a is smaller than b,
@@ -38,7 +42,7 @@ static inline int8_t sv_compare(string_view_t a, string_view_t b) {
 static inline void sv_chop_left(string_view_t* sv, uint64_t n) {
   ZYRX_ASSERT(sv->length >= n, "String view is too small to be chopped");
   sv->data += n;
-  sv->data -= n;
+  sv->length -= n;
 }
 
 static inline void sv_chop_right(string_view_t* sv, uint64_t n) {
@@ -46,9 +50,26 @@ static inline void sv_chop_right(string_view_t* sv, uint64_t n) {
   sv->length -= n;
 }
 
+static inline void sv_trim_left(string_view_t* sv) {
+  while (isspace(sv->data[0])) {
+    sv_chop_left(sv, 1);
+  }
+}
+
+static inline void sv_trim_right(string_view_t* sv) {
+  while (isspace(sv->data[sv->length - 1])) {
+    sv_chop_right(sv, 1);
+  }
+}
+
+static inline void sv_trim(string_view_t* sv) {
+  sv_trim_left(sv);
+  sv_trim_right(sv);
+}
+
 // Returning string must be freed!
 char* get_file_string(const char* path) {
-  FILE* file = fopen(path, "r");
+  FILE* file = fopen(path, "rb");
   ZYRX_ASSERT(file != NULL, "Couldn't open file");
 
   fseek(file, 0, SEEK_END);
@@ -69,7 +90,10 @@ int main() {
   string_view_t file_view = SV(file_string);
   (void)file_view;
 
-  printf("%d", sv_compare(SV("Java"), SV("Python")));
+  string_view_t sv = SV("       HELLO   WORLD      ");
+  sv_trim(&sv);
+
+  printf("|" SV_FMT "|\n", (int)sv.length, sv.data);
 
   free(file_string);
 }
