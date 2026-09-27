@@ -8,6 +8,7 @@
 #include "vec/vec.h"
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 typedef struct {
   char* data;
@@ -23,7 +24,7 @@ typedef struct {
 1 means a is bigger than b,
 */
 static inline int8_t sv_compare(string_view_t a, string_view_t b) {
-  for (uint64_t i = 0; i < MAX(a.length, b.length); i++) {
+  for (uint64_t i = 0; i < MIN(a.length, b.length); i++) {
     if (a.data[i] > b.data[i]) {
       return 1;
     } else if (a.data[i] < b.data[i]) {
