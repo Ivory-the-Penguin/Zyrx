@@ -33,7 +33,6 @@ int main() {
   while (file_view.length > 0) {
     string_view_t line = sv_chop_by_delimiter(&file_view, '\n');
     sv_trim(&line);
-    line = sv_chop_by_delimiter(&line, ' ');
     printf("|" SV_FMT "|\n", (int)line.length, line.data);
   }
 

@@ -2,6 +2,7 @@
 #define ZYRX_SV_H
 
 #include <ctype.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -34,6 +35,14 @@ static inline int8_t sv_compare(string_view_t a, string_view_t b) {
   }
 
   return (cmp > 0 ? 1 : -1);
+}
+
+static inline bool sv_has_prefix(string_view_t sv, string_view_t prefix) {
+  if (prefix.length > sv.length) {
+    return false;
+  }
+
+  return memcmp(sv.data, prefix.data, prefix.length) == 0;
 }
 
 static inline void sv_chop_left(string_view_t* sv, uint64_t n) {
