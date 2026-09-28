@@ -33,7 +33,7 @@ Vector <- extension {
     libc.puts("Vector has printed!");
   }
 
-  length <- func() {
+  length <- func() float {
     return libc.sqrt(self.x * self.x + self.y * self.y);
   }
 }
@@ -53,7 +53,7 @@ void Vector_print(Vector* self) {
   puts("Vector has printed!"); 
 }
 
-double Vector_length(const Vector *self) {
+float Vector_length(const Vector *self) {
   return sqrt(self->x * self->x + self->y * self->y);
 }
 ```

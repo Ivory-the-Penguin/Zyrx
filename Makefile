@@ -31,6 +31,6 @@ run: $(NAME)
 	@./$(NAME)
 
 clean:
-	rm -rf $(BUILD_DIR) $(NAME) $(SHADER_OUT_DIR) compile_flags.txt
+	rm -rf $(BUILD_DIR) $(NAME) compile_flags.txt
 
 .PHONY: run clean
