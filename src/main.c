@@ -43,6 +43,5 @@ int main(void) {
     printf("|" SV_FMT "|\n", (int)line.length, line.data);
   }
 
-  arena_clear(&arena);
   FREE(heap, buffer);
 }
