@@ -36,6 +36,12 @@ static inline int8_t sv_compare(string_view_t a, string_view_t b) {
     }
   }
 
+  if (a.length > b.length) {
+    return 1;
+  } else if (a.length < b.length) {
+    return -1;
+  }
+
   return 0;
 }
 
@@ -69,14 +75,18 @@ static inline void sv_trim(string_view_t* sv) {
 
 static inline string_view_t sv_chop_by_delimiter(string_view_t* sv,
                                                  char delimiter) {
-  while (sv->data[0] == delimiter) {
+  while (sv->length > 0 && sv->data[0] == delimiter) {
     sv_chop_left(sv, 1);
   }
 
-  uint64_t end = 0;
-  while (end <= sv->length && sv->data[end] != delimiter) {
-    end++;
+  if (sv->length == 0) {
+    return *sv;
   }
+
+  uint64_t end = 0;
+  do {
+    end++;
+  } while (end < sv->length && sv->data[end] != delimiter);
 
   string_view_t out;
   if (end < sv->length) {
@@ -100,10 +110,14 @@ static inline string_view_t sv_chop_by_type(string_view_t* sv,
     sv_chop_left(sv, 1);
   }
 
-  uint64_t end = 0;
-  while (end <= sv->length && !is_type(sv->data[end])) {
-    end++;
+  if (sv->length == 0) {
+    return *sv;
   }
+
+  uint64_t end = 0;
+  do {
+    end++;
+  } while (end < sv->length && !is_type(sv->data[end]));
 
   string_view_t out;
   if (end < sv->length) {
@@ -127,10 +141,14 @@ static inline string_view_t sv_chop_by_type_rev(string_view_t* sv,
     sv_chop_left(sv, 1);
   }
 
-  uint64_t end = 0;
-  while (end <= sv->length && is_type(sv->data[end])) {
-    end++;
+  if (sv->length == 0) {
+    return *sv;
   }
+
+  uint64_t end = 0;
+  do {
+    end++;
+  } while (end < sv->length && is_type(sv->data[end]));
 
   string_view_t out;
   if (end < sv->length) {
