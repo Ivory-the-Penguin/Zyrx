@@ -73,8 +73,7 @@ static inline void sv_trim(string_view_t* sv) {
   sv_trim_right(sv);
 }
 
-static inline string_view_t sv_chop_by_delimiter(string_view_t* sv,
-                                                 char delimiter) {
+string_view_t sv_chop_by_delimiter(string_view_t* sv, char delimiter) {
   while (sv->length > 0 && sv->data[0] == delimiter) {
     sv_chop_left(sv, 1);
   }
@@ -104,8 +103,7 @@ static inline string_view_t sv_chop_by_delimiter(string_view_t* sv,
 }
 
 // is_type is what IS a delimiter
-static inline string_view_t sv_chop_by_type(string_view_t* sv,
-                                            int (*is_type)(int c)) {
+string_view_t sv_chop_by_type(string_view_t* sv, int (*is_type)(int c)) {
   while (sv->length > 0 && is_type(sv->data[0])) {
     sv_chop_left(sv, 1);
   }
@@ -135,8 +133,7 @@ static inline string_view_t sv_chop_by_type(string_view_t* sv,
 }
 
 // is_type is what ISN'T a delimiter
-static inline string_view_t sv_chop_by_type_rev(string_view_t* sv,
-                                                int (*is_type)(int c)) {
+string_view_t sv_chop_by_type_rev(string_view_t* sv, int (*is_type)(int c)) {
   while (sv->length > 0 && !is_type(sv->data[0])) {
     sv_chop_left(sv, 1);
   }
