@@ -26,16 +26,51 @@ char* get_file_string(allocator_t allocator, const char* path) {
   return file_string;
 }
 
-#define ARENA_SIZE (10 * 1024 * 1024)
+typedef enum {
+  TOKEN_UNKNOWN = -1,
+  TOKEN_COMMENT,
+  TOKEN_CONST_DEF,
+  TOKEN_DATA_TYPE,
+  TOKEN_LEFT_BRACE,
+  TOKEN_RIGHT_BRACE,
+  TOKEN_LEFT_PAREN,
+  TOKEN_RIGHT_PAREN,
+  TOKEN_SEMICOLON,
+  TOKEN_IDENTIFIER,
+  TOKEN_PROC,
+  TOKEN_RETURN,
+} token_type_t;
+
+typedef enum {
+  DATATYPE_INT,
+} data_type_t;
+
+typedef struct {
+  token_type_t token_type;
+  data_type_t data_type;
+
+  uint64_t line;
+  uint64_t column_beg;
+  uint64_t column_end;
+
+  union {
+    int int_literal;
+
+    string_view_t comment;
+    string_view_t lexeme;
+  } as;
+} token_t;
+
+#define ARENA_SIZE (1 * 1024 * 1024)
 
 int main(void) {
   uint8_t* buffer = (uint8_t*)ALLOC(heap, ARENA_SIZE);
   arena_t arena = arena_make(buffer, ARENA_SIZE);
   allocator_t alloc = arena_make_allocator(&arena);
+  (void)alloc;
 
-  char* file_string = get_file_string(alloc, "test.zrx");
+  char* file_string = get_file_string(heap, "test.zrx");
   string_view_t file_view = SV(file_string);
-  (void)file_view;
 
   while (file_view.length > 0) {
     string_view_t line = sv_chop_by_delimiter(&file_view, '\n');
