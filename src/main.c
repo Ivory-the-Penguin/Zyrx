@@ -13,7 +13,7 @@
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 typedef struct {
-  char* data;
+  const char* data;
   uint64_t length;
 } string_view_t;
 
@@ -57,13 +57,13 @@ static inline void sv_chop_right(string_view_t* sv, uint64_t n) {
 }
 
 static inline void sv_trim_left(string_view_t* sv) {
-  while (sv->length > 0 && isspace(sv->data[0])) {
+  while (sv->length > 0 && isspace((unsigned char)sv->data[0])) {
     sv_chop_left(sv, 1);
   }
 }
 
 static inline void sv_trim_right(string_view_t* sv) {
-  while (sv->length > 0 && isspace(sv->data[sv->length - 1])) {
+  while (sv->length > 0 && isspace((unsigned char)sv->data[sv->length - 1])) {
     sv_chop_right(sv, 1);
   }
 }
@@ -104,7 +104,7 @@ string_view_t sv_chop_by_delimiter(string_view_t* sv, char delimiter) {
 
 // is_type is what IS a delimiter
 string_view_t sv_chop_by_type(string_view_t* sv, int (*is_type)(int c)) {
-  while (sv->length > 0 && is_type(sv->data[0])) {
+  while (sv->length > 0 && is_type((unsigned char)sv->data[0])) {
     sv_chop_left(sv, 1);
   }
 
@@ -115,7 +115,7 @@ string_view_t sv_chop_by_type(string_view_t* sv, int (*is_type)(int c)) {
   uint64_t end = 0;
   do {
     end++;
-  } while (end < sv->length && !is_type(sv->data[end]));
+  } while (end < sv->length && !is_type((unsigned char)sv->data[end]));
 
   string_view_t out;
   if (end < sv->length) {
@@ -134,7 +134,7 @@ string_view_t sv_chop_by_type(string_view_t* sv, int (*is_type)(int c)) {
 
 // is_type is what ISN'T a delimiter
 string_view_t sv_chop_by_type_rev(string_view_t* sv, int (*is_type)(int c)) {
-  while (sv->length > 0 && !is_type(sv->data[0])) {
+  while (sv->length > 0 && !is_type((unsigned char)sv->data[0])) {
     sv_chop_left(sv, 1);
   }
 
@@ -145,7 +145,7 @@ string_view_t sv_chop_by_type_rev(string_view_t* sv, int (*is_type)(int c)) {
   uint64_t end = 0;
   do {
     end++;
-  } while (end < sv->length && is_type(sv->data[end]));
+  } while (end < sv->length && is_type((unsigned char)sv->data[end]));
 
   string_view_t out;
   if (end < sv->length) {
