@@ -97,18 +97,21 @@ static inline void arena_clear(arena_t* arena) {
   arena->offset = 0;
 }
 
+#define ALLOC(allocator, bytes) (allocator).alloc(&(allocator), (bytes))
+#define FREE(allocator, ptr) (allocator).free(&(allocator), (ptr))
+
 int main(void) {
-  uint8_t* buffer = (uint8_t*)heap.alloc(&heap, 1024);
+  uint8_t* buffer = (uint8_t*)ALLOC(heap, 1024);
   arena_t arena = arena_make(buffer, 1024);
   allocator_t alloc = arena_make_allocator(&arena);
 
-  int* a = alloc.alloc(&alloc, sizeof(int));
+  int* a = ALLOC(alloc, sizeof(int));
   *a = 1321521;
 
   printf("%d", *a);
 
   arena_clear(&arena);
-  heap.free(&heap, buffer);
+  FREE(heap, buffer);
 }
 
 // int main() {
