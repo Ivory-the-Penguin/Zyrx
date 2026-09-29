@@ -1,0 +1,3 @@
+[submodule "src/ivystd"]
+	path = src/ivystd
+	url = https://github.com/Ivory-the-Penguin/ivystd
