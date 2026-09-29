@@ -1,3 +1,6 @@
+// Some comment       
+//another comment
+//               this one is with padding              
 main <- proc() int {
   return 0;
 }
